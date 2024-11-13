@@ -3,6 +3,7 @@ const sequelize = new Sequelize(process.env.MYSQL_ADDON_DB || 'am_prueba' , proc
 
     host: process.env.MYSQL_ADDON_HOST || 'localhost',
     dialect: 'mysql',
+    dialectModule: require('mysql2'),
     port: process.env.MYSQL_ADDON_PORT || 3306
   });
 
