@@ -5,10 +5,11 @@ const historiaClinicaRouter=require("./routes/historiaClinica")
 const turnoRouter = require("./routes/turno");
 const agendaRouter = require('./routes/agenda');
 const consultaRouter = require("./routes/consulta")
+const path = require('path');
 
-
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.set('views', './views');
+//app.set('views', './views');
 
 app.use(express.static('public'));
 
