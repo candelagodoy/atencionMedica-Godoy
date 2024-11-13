@@ -14,7 +14,7 @@ app.use(express.static('public'));
 
 app.use("/turno", turnoRouter )
 app.use("/historiaClinica", historiaClinicaRouter )
-app.use("/agenda", agendaRouter)
+app.use("/", agendaRouter)
 app.use("/consulta", consultaRouter)
 
 
