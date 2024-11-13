@@ -1,0 +1,59 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
+
+    body 
+        header.bg-primary.text-white.py-4
+            h1.text-center Clinica  
+            p.text-center Consulta
+
+        form(action="/consulta" method="POST" class="container mt-5")
+            .mb-3
+                label.form-label DIAGNOSTICO
+                textarea.form-control(name="diagnostico" rows="4" cols="50") Placeholder para el texto
+            .mb-3
+                label.form-label ANTECEDENTES
+                textarea.form-control(name="antecedesnte" rows="4" cols="50") Placeholder para el texto
+            .mb-3
+                h5 Desde
+                input.form-control.w-auto(type="date" name="desdeAntecedente")
+            .mb-3
+                h5 Hasta
+                input.form-control.w-auto(type="date" name="hastaAntecedente")
+            .mb-3
+                label.form-label HABITOS 
+                textarea.form-control(name="habitos" rows="4" cols="50") Placeholder para el texto
+            .mb-3    
+                h5 Desde
+                input.form-control.w-auto(type="date" name="desdeHabito")
+            .mb-3    
+                h5 Hasta
+                input.form-control.w-auto(type="date" name="hastaHabito")
+            .mb-3    
+                label.form-label EVOLUCION
+                textarea.form-control(name="evolucion" rows="4" cols="50") Placeholder para el texto
+            .mb-3    
+                label.form-label MEDICAMENTOS
+                textarea.form-control(name="medicamento" rows="4" cols="50") Placeholder para el texto
+            .mb-3    
+                label.form-label(for="alergias") ALERGIAS 
+                select.form-select(name="alergias") 
+                    option(value="") Seleccione una alergia
+                    each alergia in (alergias || [])
+                        option(value=alergia.nombreAlergia) #{alergia.nombreAlergia}
+            .mb-3            
+                h4 importancia 
+                    select.form-select(name="importancias") 
+                        each importancia in (importancias || [])
+                            option(value=importancia.gradoImportancia) #{importancia.gradoImportancia}
+            .mb-3
+                h5 Desde
+                input.form-control.w-auto(type="date" name="desdeAlergia")
+            .mb-3
+                h5 Hasta
+                input.form-control.w-auto(type="date" name="hastaAlergia")
+                button.btn.btn-primary(type="submit") Guardar Consulta

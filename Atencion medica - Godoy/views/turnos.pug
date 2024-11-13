@@ -1,0 +1,41 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+        link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css")
+        script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+        script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+    body
+        header.text-white.py-4(style="background-color: #15cfaa; color: white;") 
+            button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
+                i.fas.fa-arrow-left
+            h1.text-center Clinica  
+            p.text-center Agenda
+
+        table#miTabla.display
+            thead
+                tr
+                    th Fecha
+                    th Hora
+                    th Nombre Paciente
+                    th Estado turno
+                    th Historia Clinica
+                    th Consulta
+            tbody
+                each turno in turnoPorAgenda
+                    tr 
+                        td= turno.fechaTurno
+                        td= turno.horaTurno
+                        td= turno.paciente && turno.paciente.persona ? turno.paciente.persona.nombre : 'No asignado'
+                        td= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
+                        td
+                            button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
+                        td    
+                            button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'`) Consulta
+    script.
+        let table = new DataTable('#miTabla');

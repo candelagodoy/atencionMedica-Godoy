@@ -1,0 +1,47 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+    
+    body
+        header.text-white.py-4(style="background-color: #15cfaa; color: white;") 
+            button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
+                i.fas.fa-arrow-left
+            h1.text-center Clinica  
+            p.text-center Historia Clinica
+
+        div.container
+    each consulta in historiaClinica
+        .card.mb-4
+            .card-header
+                - const fechaFormateada = new Date(consulta.fechaAtencion).toLocaleDateString("es-ES")
+                - const horaFormateada = new Date(consulta.fechaAtencion).toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' })
+                h5 Fecha de Atención: #{fechaFormateada} #{horaFormateada}
+            .card-body
+                ul.list-group.list-group-flush
+                    li.list-group-item
+                        strong Motivo de Consulta: 
+                        | #{consulta.turno ? consulta.turno.motivo : 'No asignado'}
+
+                    li.list-group-item
+                        strong Nombre del Paciente: 
+                        | #{consulta.paciente && consulta.paciente.persona ? consulta.paciente.persona.nombre : 'No asignado'}
+
+                    li.list-group-item
+                        strong Diagnóstico: 
+                        | #{consulta.diagnosticos && consulta.diagnosticos.length > 0 ? consulta.diagnosticos[0].detalleDiagnostico : 'No asignado'}
+
+                    li.list-group-item
+                        strong Evolución: 
+                        | #{consulta.evolucion || 'No disponible'}
+
+                    li.list-group-item
+                        strong Antecedentes: 
+                        | #{consulta.antecedentes && consulta.antecedentes.length > 0 ? consulta.antecedentes[0].descripcionAntecedente : 'No asignado'}
+

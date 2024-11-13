@@ -1,0 +1,24 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
+    body
+        header.bg-primary.text-white.py-4
+            h1.text-center Clinica  
+            p.text-center Agenda
+        container.d-flex.justify-content-center.align-items-center.mt-4
+            .text-center.p-4.border.rounded.shadow-lg.bg-light
+                h1.mb-4.text-primary Datos
+                p.mb-2
+                    strong Matricula: 
+                    | #{matricula.matriculaFK}
+                p.mb-2
+                    strong DNI: 
+                    | #{dni.dniFK}
+                p.mb-2
+                    strong Nombre y Apellido: 
+                    | #{nombreApellido.nombre}
+                button.btn.btn-primary(onclick=`window.location.href='/turno'`) Consultar Agenda

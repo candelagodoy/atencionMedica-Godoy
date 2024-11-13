@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+    body 
+        table 
+            thead 
+                tr 
+                    th dni 
+                    th nombre 
+                    th apellido 
+                    th numero de celular 
+                    th direccion 
+                    th email
+                tbody 
+                    each persona in personas
+                        tr 
+                            td= persona.dni 
+                            td= persona.nombre 
+                            td= persona.apellido 
+                            td= persona.numCelular 
+                            td= persona.direccion 
+                            td= persona.email
