@@ -32,10 +32,12 @@ html(lang="en")
                         td= turno.fechaTurno
                         td= turno.horaTurno
                         td= turno.paciente && turno.paciente.persona ? turno.paciente.persona.nombre : 'No asignado'
-                        td= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
+                        td(id="estado")= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
                         td
                             button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
                         td    
                             button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'`) Consulta
     script.
         let table = new DataTable('#miTabla');
+    
+    
