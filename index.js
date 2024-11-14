@@ -16,10 +16,10 @@ app.set('view engine', 'pug');
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     next();
-});
+}); */
 app.use("/", agendaRouter)
 app.use("/turno", turnoRouter)
 app.use("/historiaClinica", historiaClinicaRouter )
