@@ -1,16 +1,18 @@
 const {Turno,Paciente,EstadoTurno,Persona} = require("../models/index");
 
-/* const updateEstado = async (req,res) =>{
-    const idTurno = req.query.idTurno;
+const updateEstado = async (id) =>{
+    
         const update = await Turno.update(
-        {idEstadoFK: 1},
+        {idEstadoFK: 3},
         {
             where: {
-                idTurno: idTurno
+                idTurno: id
             }
         }
     )
-} */
+    console.log(update);
+    return update;
+}
 
 const obtenerTurnosPorAgenda = async(req, res) =>{
     
@@ -43,4 +45,4 @@ const obtenerTurnosPorAgenda = async(req, res) =>{
 }
 
 
-module.exports = { obtenerTurnosPorAgenda }
+module.exports = { obtenerTurnosPorAgenda , updateEstado }

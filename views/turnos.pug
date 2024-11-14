@@ -36,8 +36,8 @@ html(lang="en")
                         td
                             button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
                         td    
-                            button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'`) Consulta
+                            button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'` id=`boton-${turno.idTurno}` disabled=(turno.idEstadoFK === 3)) Consulta
     script.
         let table = new DataTable('#miTabla');
-    
+   
     
