@@ -3,10 +3,10 @@ const { findAllAlergias }= require("./alergias")
 const { findAllImportancias } = require("./importancia") 
 const { updateEstado }= require("./turno")
 
-let idTurno = '';
+var idTurno = '';
 const findAllSelects = async (req, res) => {
 
-    idTurno = req.query.id;
+    idTurno = req.query.id || req.params.id;
     
     await updateEstado(idTurno)
     
