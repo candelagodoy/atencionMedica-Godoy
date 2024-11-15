@@ -17,13 +17,15 @@ const findAllSelects = async (req, res) => {
     
     await updateEstado(idTurno)
     
-    res.render("../views/consulta.pug")
+    res.render("../views/consulta.pug",{idTurno})
 } 
 
 
 
 const createConsulta = async (req, res) => {
     const editorContent = req.body.editorContent; 
+    const { id } = req.params;
+    console.log(id);
 
     if(turno === null || turno === undefined){
         res.render("../views/consulta.pug", { error:true, isVisible: false});
