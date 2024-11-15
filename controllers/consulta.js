@@ -4,9 +4,16 @@ const { findAllImportancias } = require("./importancia")
 const { updateEstado }= require("./turno")
 
 var idTurno = '';
+var turno = '';
 const findAllSelects = async (req, res) => {
 
-    idTurno = req.query.id || req.params.id;
+    idTurno = req.query.id;
+
+    turno = await Turno.findOne({
+        where: {
+            idTurno: idTurno
+        }
+    });
     
     await updateEstado(idTurno)
     
@@ -19,11 +26,7 @@ const createConsulta = async (req, res) => {
     const editorContent = req.body.editorContent; 
     console.log(idTurno);
     console.log("aca" + editorContent);
-    const turno = await Turno.findOne({
-        where: {
-            idTurno: idTurno
-        }
-    });
+    
     const consulta = await Consulta.create(
         {
             fechaAtencion: turno.fechaTurno,
