@@ -9,11 +9,11 @@ const findAllSelects = async (req, res) => {
 
     idTurno = req.query.id;
 
-    turno = await Turno.findOne({
+    turno = null /* await Turno.findOne({
         where: {
             idTurno: idTurno
         }
-    });
+    }); */
     
     await updateEstado(idTurno)
     
@@ -24,8 +24,11 @@ const findAllSelects = async (req, res) => {
 
 const createConsulta = async (req, res) => {
     const editorContent = req.body.editorContent; 
-    console.log(idTurno);
-    console.log("aca" + editorContent);
+
+    if(turno === null || turno === undefined){
+        res.render("../views/consulta.pug", { error:true, isVisible: false});
+        return;
+    }
     
     const consulta = await Consulta.create(
         {
