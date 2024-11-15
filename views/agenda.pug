@@ -5,20 +5,21 @@ html(lang="en")
         title Document
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
-    body
-        header.bg-primary.text-white.py-4
-            h1.text-center Clinica  
+    body(style="background-image: url('../imagenes/fondoMedico.jpeg');")
+        header.text-white.py-4(style="background-color: #84d5d5; color: white;") 
+            h1.text-center Atención Médica  
             p.text-center Agenda
         container.d-flex.justify-content-center.align-items-center.mt-4
-            .text-center.p-4.border.rounded.shadow-lg.bg-light
-                h1.mb-4.text-primary Datos
+            .text-center.p-4.border.rounded.shadow-lg(style="background-color: #e4e4e4; color: #333;")
+                h1.mb-4.text(style="color: #43adcf") Médico
+                p.mb-2
+                    strong Nombre y Apellido: 
+                    | #{nombreApellido.nombre} #{nombreApellido.apellido}
                 p.mb-2
                     strong Matricula: 
                     | #{matricula.matriculaFK}
                 p.mb-2
                     strong DNI: 
                     | #{dni.dniFK}
-                p.mb-2
-                    strong Nombre y Apellido: 
-                    | #{nombreApellido.nombre}
-                button.btn.btn-primary(onclick=`window.location.href='/turno'`) Consultar Agenda
+                
+                button.btn.btn-primary(style="background-color: #43adcf" onclick=`window.location.href='/turno'`) Consultar Agenda

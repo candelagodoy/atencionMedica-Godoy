@@ -1,10 +1,5 @@
 const {Consulta,Paciente,Persona,Diagnostico,Antecedentes, Turno} = require("../models/index.js")
 
-/* const findAll = async (req, res) =>{
-    const consultas = await Consulta.findAll();
-    res.render("../views/historiaClinica.pug",{ consultas })
-
-} */
 
 const find = async (req, res) => {
     const dni = req.query.dni;

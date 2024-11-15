@@ -8,7 +8,8 @@ const Consulta = sequelize.define(
         idConsulta : {
             primaryKey:true,
             type:DataTypes.INTEGER,
-            allowNull:false
+            allowNull:false,
+            autoIncrement:true
         },
         fechaAtencion : {
             type: DataTypes.DATE,
