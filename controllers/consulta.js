@@ -17,7 +17,7 @@ const findAllSelects = async (req, res) => {
     
     await updateEstado(idTurno)
     
-    res.render("../views/consulta.pug",{idTurno})
+    res.render("../views/consulta.pug",{idTurno,error:false, isVisible: false})
 } 
 
 
@@ -28,10 +28,11 @@ const createConsulta = async (req, res) => {
     console.log(id);
 
     if(turno === null || turno === undefined){
-        res.render("../views/consulta.pug", { error:true, isVisible: false});
+        res.render("../views/consulta.pug", { error:true, isVisible: false, idTurno});
         return;
     }
     
+
     const consulta = await Consulta.create(
         {
             fechaAtencion: turno.fechaTurno,
@@ -41,8 +42,14 @@ const createConsulta = async (req, res) => {
         }
     )
 
-    const isVisible = true; 
-    res.render("../views/consulta.pug", { isVisible });
+    if(consulta.idConsulta){
+        res.render("../views/consulta.pug", { isVisible:true, error:false, idTurno});
+    } else {
+        res.render("../views/consulta.pug", { isVisible:false, error:true, idTurno});
+    }
+
+    
+    
 }
 
 
