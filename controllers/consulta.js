@@ -9,11 +9,11 @@ const findAllSelects = async (req, res) => {
 
     idTurno = req.query.id;
 
-    turno = null /* await Turno.findOne({
+    turno = await Turno.findOne({
         where: {
             idTurno: idTurno
         }
-    }); */
+    });
     
     await updateEstado(idTurno)
     
