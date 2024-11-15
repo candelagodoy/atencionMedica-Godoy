@@ -32,7 +32,7 @@ const createConsulta = async (req, res) => {
             fechaAtencion: turno.fechaTurno,
             dniPacienteFK: turno.dniPacienteFK,
             evolucion: editorContent,
-            idTurnoFK: idTurno
+            idTurnoFK: turno.idTurno
         }
     )
 
