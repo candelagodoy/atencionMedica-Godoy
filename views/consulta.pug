@@ -24,11 +24,17 @@ html(lang="en")
             .mb-3
                 label.form-label(style=" color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5) ; font-size: 24px; font-weight: bold; text-align: center;") EVOLUCION
                     div(id="editor")(style="width: 800px; height: 200px;")
+                label.form-label(style=" color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5) ; font-size: 24px; font-weight: bold; text-align: center;") DIAGNOSTICO
+                textarea.form-control(name="diagnostico" rows="4" cols="50") Placeholder para el texto
+            .mb-3
                         
                 div
                     button.btn.btn-primary(style="background-color: #43adcf" type="submit") Guardar Consulta
             input(type="hidden" id="editorContent" name="editorContent")
-           
+                
+            .mb-3
+        
+        //button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
 
 
         script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")

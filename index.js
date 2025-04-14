@@ -27,5 +27,5 @@ app.use("/consulta", consultaRouter)
 
 
 app.listen(3000, () => {
-    console.log("App en puerto 3306");
+    console.log("App en puerto 3000");
 });
