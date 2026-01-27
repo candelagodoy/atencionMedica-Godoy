@@ -14,12 +14,12 @@ html(lang="en")
                 h1.mb-4.text(style="color: #43adcf") Médico
                 p.mb-2
                     strong Nombre y Apellido: 
-                    | #{nombreApellido.nombre} #{nombreApellido.apellido}
+                    | #{nombre} #{apellido}
                 p.mb-2
                     strong Matricula: 
-                    | #{matricula.matriculaFK}
+                    | #{matricula}
                 p.mb-2
                     strong DNI: 
-                    | #{dni.dniFK}
+                    | #{dni}
                 
                 button.btn.btn-primary(style="background-color: #43adcf" onclick=`window.location.href='/turno'`) Consultar Agenda

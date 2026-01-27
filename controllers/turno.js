@@ -14,6 +14,7 @@ const updateEstado = async (id) =>{
     return update;
 }
 
+
 const obtenerTurnosPorAgenda = async(req, res) =>{
     
     const turnoPorAgenda = await Turno.findAll({

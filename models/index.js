@@ -14,12 +14,12 @@ const Medicamento = require("./medicamento");
 const Alergia= require("./alergia")
 const ConsultaAlergia= require("./consultaalergia")
 const Importancia= require("./importancia")
+const Usuario= require("./usuario")
 
 
 //Relacion medico-especialidad NaN
 Medico.belongsToMany(Especialidad, { through: MedicoEspecialidad , as:'especialidad' });
 Especialidad.belongsToMany(Medico, { through: MedicoEspecialidad , as: 'medico'});
-
 
 //Relacion turno-estadoTurno
 EstadoTurno.hasMany(Turno, {foreignKey: 'idEstadoFK', as: 'turno'})
@@ -77,6 +77,10 @@ ConsultaAlergia.belongsTo(Importancia, {foreignKey: 'idImportanciaFK', as: 'impo
 Turno.hasMany(Consulta,{foreignKey: 'idTurnoFK'})
 Consulta.belongsTo(Turno, { foreignKey: 'idTurnoFK'});
 
+//Relacion usuario - medico
+Medico.hasOne(Usuario, { foreignKey: 'dniMedicoFK', sourceKey: 'dni' });//porque la PK de medico no es id, es dni
+Usuario.belongsTo(Medico, { foreignKey: 'dniMedicoFK' });
+
 
 module.exports = {
     Medico,
@@ -94,5 +98,6 @@ module.exports = {
     Medicamento,
     Habito,
     Antecedentes,
-    Diagnostico
+    Diagnostico,
+    Usuario
 }

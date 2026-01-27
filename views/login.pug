@@ -1,0 +1,29 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Login
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
+    body(style="background-image: url('../imagenes/fondoMedico.jpeg');")
+        header.text-white.py-4(style="background-color: #84d5d5;")
+            h1.text-center Atención Médica
+            p.text-center Ingreso al sistema
+
+        .container.d-flex.justify-content-center.align-items-center.mt-5
+            .p-4.border.rounded.shadow-lg(style="background-color: #e4e4e4; width: 400px;")
+                h3.text-center.mb-4(style="color: #43adcf") Login
+
+                form(method="POST" action="/login")
+                    .mb-3
+                        label.form-label Usuario
+                        input.form-control(type="text" name="email" required)
+
+                    .mb-3
+                        label.form-label Contraseña
+                        input.form-control(type="contraseña" name="contraseña" required)
+
+                    button.btn.btn-primary.w-100(style="background-color: #43adcf") Ingresar
+
+                if error
+                    p.text-danger.text-center.mt-3 #{error}
