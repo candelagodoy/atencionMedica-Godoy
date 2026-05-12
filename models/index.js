@@ -15,39 +15,48 @@ const Alergia= require("./alergia")
 const ConsultaAlergia= require("./consultaalergia")
 const Importancia= require("./importancia")
 const Usuario= require("./usuario")
+const Plantilla= require("./plantilla")
 
 
-//Relacion medico-especialidad NaN
-Medico.belongsToMany(Especialidad, { through: MedicoEspecialidad , as:'especialidad' });
-Especialidad.belongsToMany(Medico, { through: MedicoEspecialidad , as: 'medico'});
+//Relacion persona-paciente
+Persona.hasOne(Paciente, { foreignKey: 'idPersona', as: 'paciente' });
+Paciente.belongsTo(Persona, { foreignKey: 'idPersona',as: 'persona'})
+
+//Relacion persona - medico
+Persona.hasOne(Medico, { foreignKey: 'idPersona', as: 'medico' });
+Medico.belongsTo(Persona, { foreignKey: 'idPersona', as: 'persona'});
+
+//Relacion usuario - medico
+Medico.hasOne(Usuario, { foreignKey: 'idMedicoFK', as: 'usuario' });
+Usuario.belongsTo(Medico, { foreignKey: 'idMedicoFK', as: 'medico'});
+
+//Relacion medico- medicoEspecialidad
+Medico.hasMany(MedicoEspecialidad, { foreignKey: 'idMedicoFK', as: 'medicoespecialidad' });
+MedicoEspecialidad.belongsTo(Medico, { foreignKey: 'idMedicoFK', as: 'medico' });
+
+//Relacion medicoEspecialidad - especialidad NaN
+Especialidad.hasMany(MedicoEspecialidad, { foreignKey: 'idEspecialidadFK', as: 'medicoespecialidad' });
+MedicoEspecialidad.belongsTo(Especialidad, { foreignKey: 'idEspecialidadFK', as: 'especialidad' });
+
+//Relacion medico-especialidad - agenda
+MedicoEspecialidad.hasMany(Agenda, { foreignKey: 'idMedicoespecialidadFK', as: 'agenda' });
+Agenda.belongsTo(MedicoEspecialidad, { foreignKey: 'idMedicoespecialidadFK', as: 'medicoespecialidad' });
+
+//Relacion turno-paciente
+Paciente.hasMany(Turno,{foreignKey:'idPacienteFK',as: 'turno'})
+Turno.belongsTo(Paciente,{foreignKey:'idPacienteFK', as: 'paciente'})
 
 //Relacion turno-estadoTurno
 EstadoTurno.hasMany(Turno, {foreignKey: 'idEstadoFK', as: 'turno'})
 Turno.belongsTo(EstadoTurno,{foreignKey: 'idEstadoFK', as: 'estadoturno'})
 
-//Relacion turno-paciente
-Paciente.hasMany(Turno,{foreignKey:'dniPacienteFK',as: 'turno'})
-Turno.belongsTo(Paciente,{foreignKey:'dniPacienteFK', as: 'paciente'})
-
 //Relacion  turno-agenda
 Agenda.hasMany(Turno, {foreignKey: 'idAgendaFK',as: 'turno'})
 Turno.belongsTo(Agenda, {foreignKey: 'idAgendaFK', as: 'agenda'})
 
-//Relacion persona-paciente
-Persona.hasOne(Paciente, { foreignKey: 'dni'})
-Paciente.belongsTo(Persona, { foreignKey: 'dni',as: 'persona'})
-
-//Relacion agenda - medico-especialidad
-MedicoEspecialidad.hasMany(Agenda, { foreignKey: 'matriculaFK' });
-Agenda.belongsTo(MedicoEspecialidad, { foreignKey: 'matriculaFK'});
-
-//Relacion persona - medico
-Persona.hasOne(Medico, { foreignKey: 'dni'});
-Medico.belongsTo(Persona, { foreignKey: 'dni', as: 'persona'});
-
-//Relacion paciente-consulta
-Paciente.hasMany(Consulta,{foreignKey: 'dniPacienteFK'})
-Consulta.belongsTo(Paciente, { foreignKey: 'dniPacienteFK' });
+//Relacion turno-consulta
+Turno.hasMany(Consulta,{foreignKey: 'idTurnoFK', as: 'consulta'})
+Consulta.belongsTo(Turno, { foreignKey: 'idTurnoFK', as: 'turno' });
 
 //Relacion consulta-diagnostico
 Consulta.hasMany(Diagnostico,{foreignKey:'idConsultaFK', as: 'diagnosticos'})
@@ -65,21 +74,21 @@ Habito.belongsTo(Consulta,{foreignKey: 'idConsultaFK', as: 'consulta' })
 Consulta.hasMany(Medicamento, {foreignKey:'idConsultaFK', as: 'medicamentos'}) 
 Medicamento.belongsTo(Consulta,{foreignKey: 'idConsultaFK', as: 'consulta' })
 
-//Relacion consulta - alergia
-Consulta.belongsToMany(Alergia, { through: ConsultaAlergia , as:'alergia' });
-Alergia.belongsToMany(Consulta, { through: ConsultaAlergia , as: 'consulta'});
+// relacion consulta - consultaAlergia
+Consulta.hasMany(ConsultaAlergia, {foreignKey: 'idConsultaFK', as: 'alergias'});
+ConsultaAlergia.belongsTo(Consulta, {foreignKey: 'idConsultaFK', as: 'consulta'});
+
+//Relacion consultaalergia - alergia
+Alergia.hasMany(ConsultaAlergia, {foreignKey: 'idAlergiaFK', as: 'consultaalergia'});
+ConsultaAlergia.belongsTo(Alergia, {foreignKey: 'idAlergiaFK', as: 'alergia'});
 
 //Relacion consultaalergia - importancia
 Importancia.hasMany(ConsultaAlergia, {foreignKey: 'idImportanciaFK', as: 'consultaalergia'});
 ConsultaAlergia.belongsTo(Importancia, {foreignKey: 'idImportanciaFK', as: 'importancia'})
 
-//Relacion turno-consulta
-Turno.hasMany(Consulta,{foreignKey: 'idTurnoFK'})
-Consulta.belongsTo(Turno, { foreignKey: 'idTurnoFK'});
-
-//Relacion usuario - medico
-Medico.hasOne(Usuario, { foreignKey: 'dniMedicoFK', sourceKey: 'dni' });//porque la PK de medico no es id, es dni
-Usuario.belongsTo(Medico, { foreignKey: 'dniMedicoFK' });
+//relacion medico - plantilla 
+Plantilla.belongsTo(Medico, { foreignKey: "idMedicoFK", as: "medico" });
+Medico.hasMany(Plantilla, { foreignKey: "idMedicoFK", as: "plantillas" });
 
 
 module.exports = {
@@ -99,5 +108,6 @@ module.exports = {
     Habito,
     Antecedentes,
     Diagnostico,
-    Usuario
+    Usuario,
+    Plantilla
 }

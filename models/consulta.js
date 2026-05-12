@@ -15,14 +15,6 @@ const Consulta = sequelize.define(
             type: DataTypes.DATE,
             allowNull:true
         },
-        dniPacienteFK : {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references:{
-                model: "paciente",
-                key: 'dni'
-            }
-        },
         evolucion: {
             type: DataTypes.STRING,
             allowNull: false
@@ -34,6 +26,12 @@ const Consulta = sequelize.define(
                 model: "turno",
                 key: 'idTurno'
             }
+        },
+        estadoConsulta: {
+            type: DataTypes.ENUM,
+            values: [ 'Pendiente', 'Finalizada'],
+            allowNull: false,
+            defaultValue: 'pendiente'
         }
 
     },

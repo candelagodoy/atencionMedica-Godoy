@@ -21,5 +21,12 @@ html(lang="en")
                 p.mb-2
                     strong DNI: 
                     | #{dni}
+                a.btn.btn-primary(href="/turno", style="background-color: #43adcf") Consultar Agenda
+
                 
-                button.btn.btn-primary(style="background-color: #43adcf" onclick=`window.location.href='/turno'`) Consultar Agenda
+                //form(method="GET" action="/turno")
+                    .mb-3
+                        label.form-label Seleccionar fecha
+                        input.form-control(type="date" name="fecha" required)
+
+                    button.btn.btn-primary(style="background-color:#43adcf") Consultar agenda

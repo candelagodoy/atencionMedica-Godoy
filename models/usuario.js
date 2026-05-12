@@ -18,13 +18,13 @@ const Usuario= sequelize.define(
             type: DataTypes.STRING,
             allowNull: false
         },
-        dniMedicoFK: {
+        idMedicoFK: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-            references:{
+            allowNull: false,
+            references: {
                 model: "medico",
-                key: 'dni'
-            }
+                key: 'idPersona'
+              }
         }
     },
     {

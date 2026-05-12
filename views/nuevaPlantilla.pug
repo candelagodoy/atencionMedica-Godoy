@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    .container.mt-4
+        h2 Nueva Plantilla
+
+        .card.shadow-sm
+            .card-body
+                form#formPlantilla(action="/plantillas" method="POST")
+                    input.form-control.mb-3(
+                        name="nombrePlantilla"
+                        placeholder="Nombre de la plantilla"
+                        required
+                    )
+
+                    label.form-label Contenido
+                    div#editorPlantilla(style="height: 250px;")
+
+                    input(type="hidden" name="contenido" id="contenidoPlantilla")
+
+                    button.btn.btn-primary.mt-3(type="submit")
+                        i.fas.fa-save.me-2
+                        | Guardar Plantilla
+
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
+    script.
+        const quillPlantilla = new Quill('#editorPlantilla', { theme: 'snow' });
+
+        document.getElementById('formPlantilla').addEventListener('submit', function() {
+            document.getElementById('contenidoPlantilla').value = quillPlantilla.root.innerHTML;
+        });

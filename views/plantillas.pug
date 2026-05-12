@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    .container.mt-4
+        h2 Mis Plantillas
+
+        if plantillas && plantillas.length > 0
+            each p in plantillas
+                .card.mb-3.shadow-sm
+                    .card-body.d-flex.justify-content-between.align-items-center
+                        div
+                            h6.mb-1 #{p.nombrePlantilla}
+                            small.text-muted !{p.contenido}
+
+                        form(action=`/plantillas/${p.idPlantilla}?_method=DELETE` method="POST")
+                            button.btn.btn-outline-danger.btn-sm
+                                i.fas.fa-trash
+        else
+            p.text-muted No tenés plantillas guardadas aún.

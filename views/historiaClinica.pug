@@ -1,48 +1,101 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+extends layout
 
-    
-    body(style="background-image: url('../imagenes/fondoMedico.jpeg');")
-        header.text-white.py-4(style="background-color: #84d5d5; color: white;")  
-            button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
-                i.fas.fa-arrow-left
-            h1.text-center Atención Médica  
-            p.text-center Historia Clinica
+block content
+    header.text-white.py-4(style="background-color: #84d5d5; color: white;")
+        button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
+            i.fas.fa-arrow-left
+        h1.text-center Atención Médica
+        p.text-center Historia Clínica
 
-        div.container
-    each consulta in historiaClinica
-        .card.mb-4
-            .card-header
-                - const fechaFormateada = new Date(consulta.fechaAtencion).toLocaleDateString("es-ES")
-                - const horaFormateada = new Date(consulta.fechaAtencion).toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' })
-                h5 Fecha de Atención: #{fechaFormateada} #{horaFormateada}
-            .card-body
-                ul.list-group.list-group-flush
-                    li.list-group-item
-                        strong Motivo de Consulta: 
-                        | #{consulta.turno ? consulta.turno.motivo : 'No asignado'}
+    .container.mt-4
+        each consulta in consultas
+            .card.mb-4.shadow-sm
+                .card-header(style="background-color: #84d5d5; color: white;")
+                    - const fechaFormateada = new Date(consulta.fechaAtencion).toLocaleDateString("es-ES")
+                    - const horaFormateada = new Date(consulta.fechaAtencion).toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' })
+                    h5.mb-0 📅 #{fechaFormateada} #{horaFormateada}
 
-                    li.list-group-item
-                        strong Nombre del Paciente: 
-                        | #{consulta.paciente && consulta.paciente.persona ? consulta.paciente.persona.nombre : 'No asignado'}
+                .card-body
+                    ul.list-group.list-group-flush
 
-                    li.list-group-item
-                        strong Diagnóstico: 
-                        | #{consulta.diagnosticos && consulta.diagnosticos.length > 0 ? consulta.diagnosticos[0].detalleDiagnostico : 'No asignado'}
+                        //- MOTIVO - visible para todos
+                        li.list-group-item
+                            strong Motivo de Consulta: 
+                            | #{consulta.turno ? consulta.turno.motivo : 'No asignado'}
 
-                    li.list-group-item
-                        strong Evolución: 
-                        | #{consulta.evolucion || 'No disponible'}
+                        //- MÉDICO - visible para todos
+                        li.list-group-item
+                            strong Médico: 
+                            | #{consulta.turno && consulta.turno.agenda && consulta.turno.agenda.medicoespecialidad && consulta.turno.agenda.medicoespecialidad.medico && consulta.turno.agenda.medicoespecialidad.medico.persona ? consulta.turno.agenda.medicoespecialidad.medico.persona.nombre + ' ' + consulta.turno.agenda.medicoespecialidad.medico.persona.apellido : 'No asignado'}
 
-                    li.list-group-item
-                        strong Antecedentes: 
-                        | #{consulta.antecedentes && consulta.antecedentes.length > 0 ? consulta.antecedentes[0].descripcionAntecedente : 'No asignado'}
+                        //- DIAGNÓSTICOS - visible para todos
+                        li.list-group-item
+                            strong Diagnósticos:
+                            if consulta.diagnosticos && consulta.diagnosticos.length > 0
+                                each d in consulta.diagnosticos
+                                    .ms-2.mt-1
+                                        span.badge.bg-secondary.me-2 #{d.tipoDiagnostico}
+                                        | #{d.detalleDiagnostico}
+                            else
+                                span.text-muted  No asignado
+
+                        //- A PARTIR DE ACÁ SOLO EL MÉDICO QUE REGISTRÓ LA CONSULTA
+                        if consulta.turno.agenda.medicoespecialidad.idMedicoFK === usuario.idMedicoFK
+
+                            //- EVOLUCIÓN
+                            li.list-group-item
+                                strong Evolución:
+                                if consulta.evolucion
+                                    div.mt-2!= consulta.evolucion
+                                else
+                                    span.text-muted  No disponible
+
+                            //- ANTECEDENTES
+                            li.list-group-item
+                                strong Antecedentes:
+                                if consulta.antecedentes && consulta.antecedentes.length > 0
+                                    each a in consulta.antecedentes
+                                        .ms-2.mt-1
+                                            | #{a.descripcionAntecedente}
+                                            small.text-muted.ms-2 Desde: #{a.fechaDesdeAntecedente} - Hasta: #{a.fechaHastaAntecedente}
+                                else
+                                    span.text-muted  No registrado
+
+                            //- MEDICAMENTOS
+                            li.list-group-item
+                                strong Medicamentos:
+                                if consulta.medicamentos && consulta.medicamentos.length > 0
+                                    each m in consulta.medicamentos
+                                        .ms-2.mt-1
+                                            | #{m.nombreMedicamento}
+                                else
+                                    span.text-muted  No registrado
+
+                            //- HÁBITOS
+                            li.list-group-item
+                                strong Hábitos:
+                                if consulta.habitos && consulta.habitos.length > 0
+                                    each h in consulta.habitos
+                                        .ms-2.mt-1
+                                            | #{h.descripcionHabito}
+                                            small.text-muted.ms-2 Desde: #{h.fechaDesdeHabito} - Hasta: #{h.fechaHastaHabito}
+                                else
+                                    span.text-muted  No registrado
+
+                            //- ALERGIAS
+                            li.list-group-item
+                                strong Alergias:
+                                if consulta.alergias && consulta.alergias.length > 0
+                                    each a in consulta.alergias
+                                        .ms-2.mt-1
+                                            | #{a.alergia.nombreAlergia}
+                                            small.text-muted.ms-2 Importancia: #{a.importancia.gradoImportancia} | Desde: #{a.fechaDesdeAlergia} - Hasta: #{a.fechaHastaAlergia}
+                                else
+                                    span.text-muted  No registrado
+
+                        else
+                            //- MENSAJE PARA CONSULTAS DE OTROS MÉDICOS
+                            li.list-group-item.text-muted
+                                i.fas.fa-lock.me-2
+                                | Los demás datos de esta consulta son privados del médico tratante.
 

@@ -15,11 +15,11 @@ const Habito= sequelize.define(
             allowNull: false,
 
         },
-        fechaDesde: {
+        fechaDesdeHabito: {
             type: DataTypes.DATE,
             allowNull: true
         },
-        fechaHasta: {
+        fechaHastaHabito: {
             type: DataTypes.DATE,
             allowNull: true,
         },

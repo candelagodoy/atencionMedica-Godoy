@@ -4,6 +4,12 @@ const sequelize = require("../config/configbd");
 const ConsultaAlergia= sequelize.define(
     'consultaalergia',
     {
+        idConsultaAlergia: {
+            primaryKey: true,
+            type: DataTypes.INTEGER,
+            allowNull:false,
+            autoIncrement: true
+        },
         idConsultaFK: {
             primaryKey:true,
             type: DataTypes.INTEGER,
@@ -22,13 +28,13 @@ const ConsultaAlergia= sequelize.define(
                 key: 'idAlergia'
             }
         },
-        fechaInicio: {
+        fechaDesdeAlergia: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true
         },
-        fechaFin: {
+        fechaHastaAlergia: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true
         },
         idImportanciaFK:{
             type: DataTypes.INTEGER,

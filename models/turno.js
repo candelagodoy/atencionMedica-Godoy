@@ -32,12 +32,12 @@ const Turno= sequelize.define(
                 key: 'idAgenda'
             }
         },
-        dniPacienteFK:{
+        idPacienteFK:{
             type:DataTypes.INTEGER,
             allowNull:false,
             references:{
                 model: "paciente",
-                key: 'dni'
+                key: 'idPersona'
             }
         },
         idEstadoFK:{

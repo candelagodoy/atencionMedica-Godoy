@@ -1,56 +1,346 @@
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
-        link(href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet")
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+extends layout 
 
-    body(style="background-image: url('../imagenes/fondoMedico.jpeg');") 
-        header.text-white.py-4(style="background-color: #84d5d5; color: white;")
-            button.btn.btn-light.btn-sm.ml-3(onclick="window.history.go(-2)")
-                i.fas.fa-arrow-left
-            h1.text-center Atención Médica 
-            p.text-center Consulta
+block content 
+    header.text-white.py-4(style="background-color: #84d5d5; color: white;")
+        button.btn.btn-light.btn-sm.ml-3(onclick="window.history.go(-2)")
+            i.fas.fa-arrow-left
+        h1.text-center Atención Médica 
+        p.text-center Consulta
 
-        if isVisible
-            p(style="display: block; color: green; font-size: 24px; font-weight: bold; text-align: center;") Consulta guardada!
-        if error
-            p(style="display: block; color: red; font-size: 24px; font-weight: bold; text-align: center;") Ocurrio un error
+    if isVisible
+        p(style="display: block; color: green; font-size: 24px; font-weight: bold; text-align: center;") Consulta guardada!
+    if error
+        p(style="display: block; color: red; font-size: 24px; font-weight: bold; text-align: center;") #{errorMensaje}   
 
-        form(action=`/consulta/${idTurno}` method="POST" class="container mt-5")
-            .mb-3
-                label.form-label(style=" color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5) ; font-size: 24px; font-weight: bold; text-align: center;") EVOLUCION
-                    div(id="editor")(style="width: 800px; height: 200px;")
-                //label.form-label(style=" color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5) ; font-size: 24px; font-weight: bold; text-align: center;") DIAGNOSTICO
-                //textarea.form-control(name="diagnostico" rows="4" cols="50") Placeholder para el texto
-            .mb-3
-                        
-                div
-                    button.btn.btn-primary(style="background-color: #43adcf" type="submit") Guardar Consulta
-            input(type="hidden" id="editorContent" name="editorContent")
-                
-            .mb-3
-        
-        //button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
+    .container-fluid.mt-4
+        .row
+            //- COLUMNA IZQUIERDA - Consulta actual
+            .col-md-9
+                .container
+                    .row
+                        .col-md-6
+                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalDiagnostico") + Diagnóstico
+
+                            if consulta.diagnosticos && consulta.diagnosticos.length > 0
+                                h3.mt-4 Diagnósticos
+                                each d in consulta.diagnosticos
+                                    .card.mb-3.shadow-sm
+                                        .card-body.d-flex.justify-content-between.align-items-center
+                                            div
+                                                p.mb-1 #{d.detalleDiagnostico}
+                                                small.text-muted #{d.tipoDiagnostico}
+                                            form(action=`/diagnostico/${d.idDiagnostico}?_method=DELETE` method="POST")
+                                                button.btn.btn-outline-danger.btn-sm
+                                                    i.fas.fa-trash
+
+                        .col-md-6
+                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalMedicamento") + Medicamento
+
+                            if consulta.medicamentos && consulta.medicamentos.length > 0
+                                h3.mt-4 Medicamentos
+                                each m in consulta.medicamentos
+                                    .card.mb-3.shadow-sm
+                                        .card-body.d-flex.justify-content-between.align-items-center
+                                            div
+                                                p.mb-1 #{m.nombreMedicamento}
+                                            form(action=`/medicamento/${m.idMedicamento}?_method=DELETE` method="POST")
+                                                button.btn.btn-outline-danger.btn-sm
+                                                    i.fas.fa-trash
+
+                    .row.mt-3
+                        .col-md-6
+                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalAntecedente") + Antecedente
+
+                            if consulta.antecedentes && consulta.antecedentes.length > 0
+                                h3.mt-4 Antecedentes
+                                each a in consulta.antecedentes
+                                    .card.mb-3.shadow-sm
+                                        .card-body.d-flex.justify-content-between.align-items-center
+                                            div
+                                                p.mb-1 #{a.descripcionAntecedente}
+                                                small.text-muted Desde: #{a.fechaDesdeAntecedente} - Hasta: #{a.fechaHastaAntecedente}
+                                            form(action=`/antecedentes/${a.idAntecedente}?_method=DELETE` method="POST")
+                                                button.btn.btn-outline-danger.btn-sm
+                                                    i.fas.fa-trash
+
+                        .col-md-6
+                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalHabito") + Habito
+
+                            if consulta.habitos && consulta.habitos.length > 0
+                                h3.mt-4 Habitos
+                                each h in consulta.habitos
+                                    .card.mb-3.shadow-sm
+                                        .card-body.d-flex.justify-content-between.align-items-center
+                                            div
+                                                p.mb-1 #{h.descripcionHabito}
+                                                small.text-muted Desde: #{h.fechaDesdeHabito} - Hasta: #{h.fechaHastaHabito}
+                                            form(action=`/habito/${h.idHabito}?_method=DELETE` method="POST")
+                                                button.btn.btn-outline-danger.btn-sm
+                                                    i.fas.fa-trash
+
+                    .row.mt-3
+                        .col-md-12
+                            button.btn.btn-primary.mb-2(data-bs-toggle="modal" data-bs-target="#modalAlergia") + Alergia
+
+                            if consulta.alergias && consulta.alergias.length > 0
+                                h3.mt-3 Alergias
+                                each a in consulta.alergias
+                                    .card.mb-2.shadow-sm
+                                        .card-body.d-flex.justify-content-between.align-items-center
+                                            div
+                                                p.mb-1 #{a.alergia.nombreAlergia}
+                                                small.text-muted Importancia: #{a.importancia.gradoImportancia}
+                                                br
+                                                small.text-muted Desde: #{a.fechaDesdeAlergia} - Hasta: #{a.fechaHastaAlergia}
+                                            form(action=`/consultaAlergia/${a.idConsultaAlergia}?_method=DELETE` method="POST")
+                                                button.btn.btn-outline-danger.btn-sm
+                                                    i.fas.fa-trash
+
+                form(action=`/consulta/${idConsulta}/finalizar` method="POST" id="formFinalizar")
+                    .mb-3
+                        button.btn.btn-outline-secondary.btn-sm.mb-2(
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalPlantillas"
+                        )
+                            i.fas.fa-file-alt.me-1
+                            | Cargar plantilla
+
+                        label.form-label(style="color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5); font-size: 24px; font-weight: bold;") EVOLUCION
+                        div(id="editor" style="height: 200px;")
+
+                    input(type="hidden" id="editorContent" name="evolucion")
+                    button.btn.btn-primary(type="submit") Finalizar Consulta
+
+            //- COLUMNA DERECHA - Historial
+            .col-md-3
+                .card.shadow-sm(style="position: sticky; top: 20px; max-height: 90vh; overflow-y: auto;")
+                    .card-header(style="background-color: #84d5d5; color: white;")
+                        h6.mb-0
+                            i.fas.fa-history.me-2
+                            | Historial del Paciente
+
+                    .card-body.p-2
+                        if historial && historial.length > 0
+                            each h in historial
+                                .accordion.mb-2(id=`acc_${h.idConsulta}`)
+                                    .accordion-item
+                                        h2.accordion-header
+                                            button.accordion-button.collapsed(
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target=`#col_${h.idConsulta}`
+                                            )
+                                                small
+                                                    - const fecha = new Date(h.fechaAtencion).toLocaleDateString("es-ES")
+                                                    | 📅 #{fecha}
+                                        .accordion-collapse.collapse(id=`col_${h.idConsulta}`)
+                                            .accordion-body.p-2
+                                                //- MOTIVO - visible para todos
+                                                small
+                                                    strong Motivo: 
+                                                    | #{h.turno ? h.turno.motivo : 'No asignado'}
+
+                                                hr.my-1
+
+                                                //- DIAGNÓSTICOS - visible para todos
+                                                small
+                                                    strong Diagnósticos:
+                                                if h.diagnosticos && h.diagnosticos.length > 0
+                                                    each d in h.diagnosticos
+                                                        .ms-2
+                                                            small
+                                                                span.badge.bg-secondary.me-1 #{d.tipoDiagnostico}
+                                                                | #{d.detalleDiagnostico}
+                                                else
+                                                    small.text-muted  No registrado
+
+                                                //- EL RESTO SOLO SI ES SU CONSULTA
+                                                if h.turno && h.turno.agenda && h.turno.agenda.medicoespecialidad && h.turno.agenda.medicoespecialidad.idMedicoFK === usuario.idMedicoFK
+
+                                                    hr.my-1
+                                                    small
+                                                        strong Evolución:
+                                                    if h.evolucion
+                                                        .ms-2.mt-1!= h.evolucion
+                                                    else
+                                                        small.text-muted  No registrada
+
+                                                    hr.my-1
+                                                    small
+                                                        strong Medicamentos:
+                                                    if h.medicamentos && h.medicamentos.length > 0
+                                                        each m in h.medicamentos
+                                                            .ms-2
+                                                                small #{m.nombreMedicamento}
+                                                    else
+                                                        small.text-muted  No registrado
+
+                                                    hr.my-1
+                                                    small
+                                                        strong Antecedentes:
+                                                    if h.antecedentes && h.antecedentes.length > 0
+                                                        each a in h.antecedentes
+                                                            .ms-2
+                                                                small #{a.descripcionAntecedente}
+                                                                br
+                                                                small.text-muted Desde: #{a.fechaDesdeAntecedente} - Hasta: #{a.fechaHastaAntecedente}
+                                                    else
+                                                        small.text-muted  No registrado
+
+                                                    hr.my-1
+                                                    small
+                                                        strong Hábitos:
+                                                    if h.habitos && h.habitos.length > 0
+                                                        each hab in h.habitos
+                                                            .ms-2
+                                                                small #{hab.descripcionHabito}
+                                                                br
+                                                                small.text-muted Desde: #{hab.fechaDesdeHabito} - Hasta: #{hab.fechaHastaHabito}
+                                                    else
+                                                        small.text-muted  No registrado
+
+                                                    hr.my-1
+                                                    small
+                                                        strong Alergias:
+                                                    if h.alergias && h.alergias.length > 0
+                                                        each a in h.alergias
+                                                            .ms-2
+                                                                small #{a.alergia.nombreAlergia}
+                                                                br
+                                                                small.text-muted Importancia: #{a.importancia.gradoImportancia} | Desde: #{a.fechaDesdeAlergia} - Hasta: #{a.fechaHastaAlergia}
+                                                    else
+                                                        small.text-muted  No registrado
+
+                                                else
+                                                    hr.my-1
+                                                    p.text-muted.text-center
+                                                        i.fas.fa-lock.me-1
+                                                        small Los demás datos son privados del médico tratante.
+                        else
+                            p.text-muted.text-center.mt-3
+                                small No hay consultas anteriores
 
 
-        script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
-        script.
-            const quill = new Quill("#editor", {
-                theme: "snow",
-            });
+    .modal.fade#modalDiagnostico(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Nuevo Diagnóstico
+                    button.btn-close(type="button" data-bs-dismiss="modal")
 
-            document.querySelector('form').addEventListener('submit', function(event) {
-                
-                const editorContent = quill.getText().trim();
+                form(action=`/diagnostico/${idConsulta}` method="POST")
+                    .modal-body
+                        textarea.form-control(name="diagnostico" required)
+
+                        select.form-select.mt-2(name="tipoDiagnostico")
+                            option(value="preliminar") Preliminar
+                            option(value="confirmado") Confirmado
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                        button.btn.btn-primary(type="submit") Guardar
+
+    .modal.fade#modalMedicamento(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Nuevo Medicamento
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+
+                form(action=`/medicamento/${idConsulta}` method="POST")
+                    .modal-body
+                        textarea.form-control(name="medicamento" placeholder="Ingrese medicamento" required)
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                        button.btn.btn-primary(type="submit") Guardar
+
+    .modal.fade#modalAntecedente(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Nuevo Antecedente
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+
+                form(action=`/antecedentes/${idConsulta}` method="POST")
+                    .modal-body
+                        textarea.form-control(name="descripcionAntecedente" placeholder="Ingrese antecedente" required)
+
+                        input.form-control.mt-2(type="date" name="fechaDesdeAntecedente" required)
+                        input.form-control.mt-2(type="date" name="fechaHastaAntecedente")
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                        button.btn.btn-primary(type="submit") Guardar
     
-                document.getElementById('editorContent').value = editorContent;
+    .modal.fade#modalHabito(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Nuevo Habito
+                    button.btn-close(type="button" data-bs-dismiss="modal")
 
-                console.log("Contenido guardado:", editorContent);
-            });
+                form(action=`/habito/${idConsulta}` method="POST")
+                    .modal-body
+                        textarea.form-control(name="descripcionHabito" placeholder="Ingrese habito" required)
+
+                        input.form-control.mt-2(type="date" name="fechaDesdeHabito" required)
+                        input.form-control.mt-2(type="date" name="fechaHastaHabito")
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                        button.btn.btn-primary(type="submit") Guardar
+                
+    .modal.fade#modalAlergia(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Nueva Alergia
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+
+                form(action=`/consultaAlergia/${idConsulta}` method="POST")
+                    .modal-body
+                        
+                        // SELECT ALERGIA
+                        label.form-label Alergia
+                        select.form-select(name="idAlergiaFK" required)
+                            option(value="") Seleccione una alergia
+                            each a in alergias
+                                option(value=a.idAlergia) #{a.nombreAlergia}
+
+                        // SELECT IMPORTANCIA
+                        label.form-label.mt-2 Importancia
+                        select.form-select(name="idImportanciaFK" required)
+                            option(value="") Seleccione importancia
+                            each i in importancias
+                                option(value=i.idImportancia) #{i.gradoImportancia}
+
+                        // FECHAS
+                        label.form-label.mt-2 Desde
+                        input.form-control(type="date" name="fechaDesdeAlergia" required)
+
+                        label.form-label.mt-2 Hasta
+                        input.form-control(type="date" name="fechaHastaAlergia")
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                        button.btn.btn-primary(type="submit") Guardar
+    .modal.fade#modalPlantillas(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Seleccionar Plantilla
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+                .modal-body
+                    select.form-select#selectPlantilla
+                        option(value="") Cargando...
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                    button.btn.btn-primary(onclick="cargarPlantilla()") Cargar
+block scripts
+    script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
+    script(src="/js/consulta.js")
 
             
 

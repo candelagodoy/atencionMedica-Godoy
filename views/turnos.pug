@@ -16,6 +16,23 @@ html(lang="en")
                 i.fas.fa-arrow-left
             h1.text-center Atención Médica  
             p.text-center Agenda
+        
+        .container.mt-4
+            .row.mb-3
+                .col-md-4
+                    label.form-label Especialidad
+                    select#medicoEspecialidad.form-select
+                        option(value="") Todas
+                        each esp in especialidades
+                            option(value=esp.idMedicoEspecialidad)= esp.especialidad.nombreEspecialidad
+
+
+                .col-md-4
+                    label.form-label Fecha
+                    input#fecha.form-control(type="date")
+
+                .col-md-4.d-flex.align-items-end
+                    button#botonFiltrar.btn.btn-primary(onclick="buscarTurnos()") Filtrar
 
         table#miTabla.display(style="background-color: rgba(255, 255, 255, 0.5);")
             thead
@@ -23,6 +40,7 @@ html(lang="en")
                     th Fecha
                     th Hora
                     th Nombre Paciente
+                    th Motivo
                     th Estado turno
                     th Historia Clinica
                     th Consulta
@@ -31,13 +49,16 @@ html(lang="en")
                     tr 
                         td= turno.fechaTurno
                         td= turno.horaTurno
-                        td= turno.paciente && turno.paciente.persona ? turno.paciente.persona.nombre : 'No asignado'
+                        td= turno.paciente && turno.paciente.persona ? `${turno.paciente.persona.nombre || ''} ${turno.paciente.persona.apellido || ''}`.trim(): 'No asignado'
+                        td= turno.motivo
                         td(id="estado")= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
                         td
-                            button.btn.btn-primary(onclick=`window.location.href='/historiaClinica?dni=${turno.dniPacienteFK}'`) HCL
+                            button.btn.btn-primary(onclick=`window.location.href='/consulta/hcl/${turno.idPacienteFK}'`) HCL
                         td    
                             button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'` id=`boton-${turno.idTurno}` disabled=(turno.idEstadoFK === 3)) Consulta
-    script.
-        let table = new DataTable('#miTabla');
+        script(src="/js/turno.js")
+        
+
+
    
     

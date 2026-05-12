@@ -4,10 +4,15 @@ const sequelize = require("../config/configbd");
 const Persona = sequelize.define(
     'persona',
     {
-        dni : {
-            primaryKey:true,
+        idPersona : {
+            primaryKey: true,
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false
+        },
+        dni : {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            unique: true
         },
         nombre : {
             type: DataTypes.STRING,
@@ -18,7 +23,7 @@ const Persona = sequelize.define(
             allowNull: true,
         },
         numCelular : {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         direccion : {

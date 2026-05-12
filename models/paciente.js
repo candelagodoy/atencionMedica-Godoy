@@ -6,13 +6,14 @@ const Persona = require("./persona");
 const Paciente = sequelize.define(
     'paciente',
     {
-        dni: {
-            type: DataTypes.STRING,
+        idPersona: {
             primaryKey: true,
+            type: DataTypes.INTEGER,
+            allowNull: false,
             references: {
-              model: Persona,
-              key: 'dni'
-            }
+                model: "persona",
+                key: 'idPersona'
+              }
         },
         seguroMedico : {
             type: DataTypes.STRING,
@@ -24,12 +25,6 @@ const Paciente = sequelize.define(
         timestamps: false,       
     }
 )
-
-//Relations
-/* Persona.hasOne(Paciente, { foreignKey: 'dni', as:'paciente' })
-Paciente.belongsTo(Persona, { foreignKey: 'dni', as:'persona' })  */
-
-
 
 
 module.exports = Paciente;

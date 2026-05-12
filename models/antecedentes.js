@@ -14,13 +14,13 @@ const Antecedentes= sequelize.define(
             type: DataTypes.STRING,
             allowNull: false
         },
-        fechaDesde: {
+        fechaDesdeAntecedente: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true
         },
-        fechaHasta: {
+        fechaHastaAntecedente: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         idConsultaFK: {
             type: DataTypes.INTEGER,

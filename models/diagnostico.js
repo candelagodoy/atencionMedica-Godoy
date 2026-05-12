@@ -20,6 +20,10 @@ const Diagnostico= sequelize.define(
                 model: "consulta",
                 key: 'idConsulta'
             }
+        },
+        tipoDiagnostico: {
+            type: DataTypes.ENUM,
+            values: ['preliminar', 'confirmado']
         }
     },
     {

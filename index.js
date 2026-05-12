@@ -4,18 +4,26 @@ var session = require('express-session');
 
 var path = require('path');
 var express  = require('express');
-const historiaClinicaRouter=require("./routes/historiaClinica")
+const methodOverride = require("method-override");
 const turnoRouter = require("./routes/turno");
 const agendaRouter = require('./routes/agenda');
 const consultaRouter = require("./routes/consulta")
 const loginRouter = require("./routes/login")
+const diagnosticoRouter = require("./routes/diagnostico")
+const medicamentoRouter = require("./routes/medicamento")
+const antecedentesRouter = require("./routes/antecedentes")
+const habitoRouter = require("./routes/habito")
+const consultaAlergiaRouter = require("./routes/consultaAlergia")
+const plantillaRouter = require("./routes/plantilla")
 
 const { log } = require('console');
 
 const app = express();
 
+
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
+app.use(methodOverride("_method"));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,16 +37,21 @@ app.use(session(
     })
 )
 
-/* app.use((req, res, next) => {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+app.use((req, res, next) => {
+    res.locals.usuario = req.session.usuario;
     next();
-}); */
+}); 
+
 app.use("/agenda", agendaRouter)
 app.use("/turno", turnoRouter)
-app.use("/historiaClinica", historiaClinicaRouter )
 app.use("/consulta", consultaRouter)
 app.use("/login", loginRouter)
-
+app.use("/diagnostico", diagnosticoRouter) 
+app.use("/medicamento", medicamentoRouter)
+app.use("/antecedentes", antecedentesRouter)
+app.use("/habito", habitoRouter)
+app.use("/consultaAlergia", consultaAlergiaRouter)
+app.use("/plantillas", plantillaRouter)
 
 
 

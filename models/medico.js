@@ -4,17 +4,17 @@ const sequelize = require("../config/configbd");
 const Medico= sequelize.define(
     'medico',
     {
-        dni:{
+        idPersona: {
             primaryKey: true,
-            type:DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "persona",
-                key: 'dni'
+                key: 'idPersona'
               }
         },
         estado:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     },

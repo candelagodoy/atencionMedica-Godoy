@@ -9,21 +9,21 @@ const Agenda= sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        fechaDesde:{
-            type: DataTypes.DATE,
-            allowNull: true
-        },
-        fechaHasta: {
-            type: DataTypes.DATE,
-            allowNull:true
-        },
-        matriculaFK: {
+        idMedicoespecialidadFK:{
             type: DataTypes.INTEGER,
-            allowNull:false,
+            allowNull: false,
             references:{
                 model: "medicoespecialidad",
-                key: 'matricula'
+                key: 'idMedicoEspecialidad'
             }
+        },
+        estado: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        fecha: {
+            type: DataTypes.DATE,
+            allowNull: false
         }
     },
     {

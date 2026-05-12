@@ -13,11 +13,7 @@ const Alergia= sequelize.define(
         nombreAlergia:{
             type: DataTypes.STRING,
             allowNull:false
-        },
-        descripcionAlergia: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
+        }
     },
     {
         tableName: 'alergia',  

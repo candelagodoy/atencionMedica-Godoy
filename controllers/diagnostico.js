@@ -1,14 +1,29 @@
-const Diagnostico= require("../models/index");
+const { Diagnostico } = require("../models/index");
 
-const createDiagnostico = async (detalleD,idCFK) => {
-    const diagnostico = await Diagnostico.create(
-        {
-            detalleDiagnostico: detalleD,
-            idConsultaFK: idCFK 
-        }
-    )
-    return diagnostico;
+const createDiagnostico = async (req, res) => {
+    const { idConsulta } = req.params;
+    const { diagnostico, tipoDiagnostico } = req.body;
+
+    await Diagnostico.create({
+        detalleDiagnostico: diagnostico,
+        idConsultaFK: idConsulta,
+        tipoDiagnostico: tipoDiagnostico
+    });
+
+    res.redirect(`/consulta/${idConsulta}`);
 }
 
-module.exports= createDiagnostico
+const deleteDiagnostico = async (req, res) => {
+    const { id } = req.params;
+
+    const diagnostico = await Diagnostico.findByPk(id);
+
+    const idConsulta = diagnostico.idConsultaFK;
+
+    await diagnostico.destroy();
+
+    res.redirect(`/consulta/${idConsulta}`);
+};
+
+module.exports= { createDiagnostico , deleteDiagnostico};
 

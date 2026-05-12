@@ -9,7 +9,7 @@ const Especialidad= sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        tipo: {
+        nombreEspecialidad: {
             type: DataTypes.STRING,
             allowNull: false
 
