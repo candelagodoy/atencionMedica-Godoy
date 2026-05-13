@@ -107,6 +107,9 @@ block content
                             | Cargar plantilla
 
                         label.form-label(style="color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5); font-size: 24px; font-weight: bold;") EVOLUCION
+                        
+                        input(type="hidden" id="evolucionExistente" value=consulta.evolucion || "")
+
                         div(id="editor" style="height: 200px;")
 
                     input(type="hidden" id="editorContent" name="evolucion")

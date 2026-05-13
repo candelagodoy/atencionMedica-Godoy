@@ -2,7 +2,6 @@ let table = new DataTable('#miTabla');
 
 
 async function buscarTurnos() {
-    alert("Entra");
 
     try {
         const idMedicoEspecialidad = document.getElementById('medicoEspecialidad').value;
@@ -40,30 +39,5 @@ async function buscarTurnos() {
     }
 }
 
-
-/*async function buscarTurnos() {
-    alert("Entra");
-    const idMedicoEspecialidad = document.getElementById('medicoEspecialidad').value;
-    const fecha = document.getElementById('fecha').value;
-
-    const response = await fetch(`/turnos?idMedicoEspecialidad=${idMedicoEspecialidad}&fecha=${fecha}`);
-    const turnos = await response.json();
-
-    table.clear();
-
-    turnos.forEach(turno => {
-        table.row.add([
-            turno.fechaTurno,
-            turno.horaTurno,
-            turno.paciente?.persona?.nombre || 'No asignado',
-            turno.motivo || 'Sin motivo',
-            turno.estadoturno?.descripcionEstado || 'No asignado',
-            `<button class="btn btn-primary" onclick="window.location.href='/historiaClinica?idPacienteFK=${turno.idPacienteFK}'">HCL</button>`,
-            `<button class="btn btn-danger" onclick="window.location.href='/consulta?id=${turno.idTurno}'" ${turno.idEstadoFK === 3 ? 'disabled' : ''}>Consulta</button>`
-        ]);
-    });
-
-    table.draw();
-}*/
 
 window.buscarTurnos = buscarTurnos;

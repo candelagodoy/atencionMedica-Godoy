@@ -80,7 +80,8 @@ const renderConsulta = async (req, res) => {
             model: Turno,
             as: "turno"
         }
-        ]   
+        ],
+        order: [["idConsulta", "DESC"]]   
     });
 
     const idPaciente = consulta.turno.idPacienteFK;
@@ -99,6 +100,8 @@ const renderConsulta = async (req, res) => {
         alergias
         
     });
+
+    console.log("consulta encontrada:", consulta ? "SI" : "NULL");
 }
 
 //funcion para reutilizar 
@@ -173,8 +176,10 @@ const obtenerHistoriaClinica = async (idPaciente, excluirIdConsulta = null) => {
             }
         ],
         where: excluirIdConsulta ? { idConsulta: { [Op.ne]: excluirIdConsulta } } : {},
-        order: [["fechaAtencion", "DESC"]]
+        order: [["idConsulta", "DESC"]]
     })
+    
+
 }
 
 const verHCL = async (req, res) => {
@@ -250,6 +255,10 @@ const finalizarConsulta = async (req, res) => {
 
     res.redirect("/turno");
 
+}
+
+/*const editarConsulta = async (req, res) => {
+    
 }
 
 

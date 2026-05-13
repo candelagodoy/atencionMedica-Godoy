@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
 function cargarPlantilla() {
     const select = document.getElementById('selectPlantilla');
     const option = select.selectedOptions[0];
@@ -53,6 +52,14 @@ function cargarPlantilla() {
 
     bootstrap.Modal.getInstance(document.getElementById('modalPlantillas')).hide();
 }
+
+// cuando tengo una evolucion cargada, carga la existente
+document.addEventListener("DOMContentLoaded", () => {
+    const evolucionExistente = document.getElementById('evolucionExistente');
+    if (evolucionExistente && evolucionExistente.value) {
+        quill.clipboard.dangerouslyPasteHTML(evolucionExistente.value);
+    }
+});
 
 
 
