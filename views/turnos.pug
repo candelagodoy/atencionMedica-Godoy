@@ -1,62 +1,52 @@
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-        link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css")
-        script(src="https://code.jquery.com/jquery-3.7.1.min.js")
-        script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js")
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
-        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+extends layout
 
-    body(style="background-image: url('../imagenes/fondoMedico.jpeg');")
-        header.text-white.py-4(style="background-color: #84d5d5; color: white;") 
-            button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
-                i.fas.fa-arrow-left
-            h1.text-center Atención Médica  
-            p.text-center Agenda
-        
-        .container.mt-4
-            .row.mb-3
-                .col-md-4
-                    label.form-label Especialidad
-                    select#medicoEspecialidad.form-select
-                        option(value="") Todas
-                        each esp in especialidades
-                            option(value=esp.idMedicoEspecialidad)= esp.especialidad.nombreEspecialidad
+block head 
+    link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css") 
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js") 
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js") 
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+block content
+    .container.mt-4
+        .row.mb-3
+            .col-md-4
+                label.form-label Especialidad
+                select#medicoEspecialidad.form-select
+                    option(value="") Todas
+                    each esp in especialidades
+                        option(value=esp.idMedicoEspecialidad)= esp.especialidad.nombreEspecialidad
 
 
-                .col-md-4
-                    label.form-label Fecha
-                    input#fecha.form-control(type="date")
+            .col-md-4
+                label.form-label Fecha
+                input#fecha.form-control(type="date")
 
-                .col-md-4.d-flex.align-items-end
-                    button#botonFiltrar.btn.btn-primary(onclick="buscarTurnos()") Filtrar
+            .col-md-4.d-flex.align-items-end
+                button#botonFiltrar.btn.btn-primary(onclick="buscarTurnos()") Filtrar
 
-        table#miTabla.display(style="background-color: rgba(255, 255, 255, 0.5);")
-            thead
-                tr
-                    th Fecha
-                    th Hora
-                    th Nombre Paciente
-                    th Motivo
-                    th Estado turno
-                    th Historia Clinica
-                    th Consulta
-            tbody
-                each turno in turnoPorAgenda
-                    tr 
-                        td= turno.fechaTurno
-                        td= turno.horaTurno
-                        td= turno.paciente && turno.paciente.persona ? `${turno.paciente.persona.nombre || ''} ${turno.paciente.persona.apellido || ''}`.trim(): 'No asignado'
-                        td= turno.motivo
-                        td(id="estado")= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
-                        td
-                            button.btn.btn-primary(onclick=`window.location.href='/consulta/hcl/${turno.idPacienteFK}'`) HCL
-                        td    
-                            button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'` id=`boton-${turno.idTurno}` disabled=(turno.idEstadoFK === 3)) Consulta
-        script(src="/js/turno.js")
+    table#miTabla.display(style="background-color: rgba(255, 255, 255, 0.5);")
+        thead
+            tr
+                th Fecha
+                th Hora
+                th Nombre Paciente
+                th Motivo
+                th Estado turno
+                th Historia Clinica
+                th Consulta
+        tbody
+            each turno in turnoPorAgenda
+                tr 
+                    td= turno.fechaTurno
+                    td= turno.horaTurno
+                    td= turno.paciente && turno.paciente.persona ? `${turno.paciente.persona.nombre || ''} ${turno.paciente.persona.apellido || ''}`.trim(): 'No asignado'
+                    td= turno.motivo
+                    td(id="estado")= turno.estadoturno ? turno.estadoturno.descripcionEstado : 'No asignado'
+                    td
+                        button.btn.btn-primary(onclick=`window.location.href='/consulta/hcl/${turno.idPacienteFK}'`) HCL
+                    td    
+                        button.btn.btn-danger(onclick=`window.location.href='/consulta?id=${turno.idTurno}'` id=`boton-${turno.idTurno}` disabled=(turno.idEstadoFK === 3)) Consulta
+    script(src="/js/turno.js")
         
 
 

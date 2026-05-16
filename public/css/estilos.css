@@ -1,0 +1,133 @@
+
+* {
+    font-family: 'Inter', sans-serif;
+}
+body {
+    background-image: linear-gradient(
+        rgba(248,249,250,0.75),
+        rgba(248,249,250,0.75)
+    ),
+    url('../imagenes/fondoMedico.jpeg');
+
+    background-size: 80%;
+    background-position: center;
+    min-height: 100vh;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+p, small, span {
+    font-weight: 400;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #43adcf !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 1.5rem 0;
+}
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    background-color: #43adcf !important;
+    color: white !important;
+}
+
+/* Botones primarios */
+.btn-primary {
+    background-color: #43adcf;
+    border-color: #43adcf;
+}
+.btn-primary:hover {
+    background-color: #2d96ba;
+    border-color: #2d96ba;
+}
+
+/* Badges diagnósticos */
+.badge-preliminar {
+    background-color: #ffc107;
+    color: #000;
+}
+.badge-confirmado {
+    background-color: #198754;
+    color: #fff;
+}
+
+/* Headers de vistas */
+.vista-header {
+    
+    color: #43adcf;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.detalle-titulo {
+    color: #2d3436;
+    font-weight: 600;
+    font-size: 1.0rem;
+}
+
+.btn-action {
+    min-width: 180px;
+}
+
+.label-evolucion {
+    color: #43adcf;
+    background-color: rgba(255,255,255,0.5);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Login */
+
+.login-body {
+    background-image: linear-gradient(
+        rgba(248,249,250,0.75),
+        rgba(248,249,250,0.75)
+    ),
+    url('../imagenes/fondoMedico.jpeg');
+
+    background-size: 80%;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.login-header {
+    background-color: #43adcf;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 1.5rem 0;
+}
+
+.login-container {
+    min-height: calc(100vh - 120px);
+}
+
+.login-card {
+    width: 500px;
+    background-color: white;
+    margin-top: 100px;
+}
+
+.login-title {
+    color: #43adcf;
+    font-weight: 600;
+}
+
+.form-control:focus {
+    border-color: #43adcf;
+    box-shadow: 0 0 0 0.2rem rgba(67, 173, 207, 0.25);
+}

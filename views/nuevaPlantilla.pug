@@ -2,9 +2,10 @@ extends layout
 
 block content
     .container.mt-4
-        h2 Nueva Plantilla
+        .vista-header
+            h2.mb-0 Nueva Plantilla
 
-        .card.shadow-sm
+        .card
             .card-body
                 form#formPlantilla(action="/plantillas" method="POST")
                     input.form-control.mb-3(
@@ -18,10 +19,14 @@ block content
 
                     input(type="hidden" name="contenido" id="contenidoPlantilla")
 
-                    button.btn.btn-primary.mt-3(type="submit")
-                        i.fas.fa-save.me-2
-                        | Guardar Plantilla
-
+                    .d-flex.justify-content-center.mt-3
+                        button.btn.btn-primary(type="submit")
+                            i.fas.fa-save.me-2
+                            | Guardar Plantilla
+    if error
+        .alert.alert-danger
+            i.fas.fa-circle-exclamation.me-2
+            | #{error}
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
     script.

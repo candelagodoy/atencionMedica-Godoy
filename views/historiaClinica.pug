@@ -1,23 +1,22 @@
 extends layout
 
 block content
-    header.text-white.py-4(style="background-color: #84d5d5; color: white;")
-        button.btn.btn-light.btn-sm.ml-3(onclick="window.history.back()")
-            i.fas.fa-arrow-left
-        h1.text-center Atención Médica
-        p.text-center Historia Clínica
-
+    .vista-header
+            h2.mb-0 Historial de Consultas
     .container.mt-4
         each consulta, index in consultas
+
             .card.mb-4.shadow-sm
-                .card-header(style="background-color: #84d5d5; color: white;")
+
+                .card-header
+
                     .d-flex.justify-content-between.align-items-center
                         div
                             - const fechaFormateada = new Date(consulta.fechaAtencion).toLocaleDateString("es-ES")
                             - const horaFormateada = new Date(consulta.fechaAtencion).toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' })
                             h5.mb-0 📅 #{fechaFormateada} #{horaFormateada}
                         
-                        //- Botón editar solo en la última consulta y solo si es su médico
+                        //- Botón editar la ultima consulta y solo si es su medico
                         if index === 0 && consulta.turno.agenda.medicoespecialidad.idMedicoFK === usuario.idMedicoFK
                             a.btn.btn-warning.btn-sm(href=`/consulta/${consulta.idConsulta}`)
                                 i.fas.fa-edit.me-1
@@ -26,19 +25,16 @@ block content
                 .card-body
                     ul.list-group.list-group-flush
 
-                        //- MOTIVO - visible para todos
-                        li.list-group-item
-                            strong Motivo de Consulta: 
-                            | #{consulta.turno ? consulta.turno.motivo : 'No asignado'}
+                        strong.detalle-titulo Motivo de Consulta: 
+                            | #{consulta.turno ? consulta.turno.motivo : 'No aregistrado'}
+                        br
 
-                        //- MÉDICO - visible para todos
-                        li.list-group-item
-                            strong Médico: 
-                            | #{consulta.turno && consulta.turno.agenda && consulta.turno.agenda.medicoespecialidad && consulta.turno.agenda.medicoespecialidad.medico && consulta.turno.agenda.medicoespecialidad.medico.persona ? consulta.turno.agenda.medicoespecialidad.medico.persona.nombre + ' ' + consulta.turno.agenda.medicoespecialidad.medico.persona.apellido : 'No asignado'}
 
-                        //- DIAGNÓSTICOS - visible para todos
-                        li.list-group-item
-                            strong Diagnósticos:
+                        strong.detalle-titulo Médico: 
+                            | #{consulta.turno && consulta.turno.agenda && consulta.turno.agenda.medicoespecialidad && consulta.turno.agenda.medicoespecialidad.medico && consulta.turno.agenda.medicoespecialidad.medico.persona ? consulta.turno.agenda.medicoespecialidad.medico.persona.nombre + ' ' + consulta.turno.agenda.medicoespecialidad.medico.persona.apellido : 'No registrado'}
+                        br
+
+                        strong.detalle-titulo Diagnósticos: 
                             if consulta.diagnosticos && consulta.diagnosticos.length > 0
                                 each d in consulta.diagnosticos
                                     .ms-2.mt-1
@@ -46,21 +42,18 @@ block content
                                         | #{d.detalleDiagnostico}
                             else
                                 span.text-muted  No asignado
-
+                        br
                         //- A PARTIR DE ACÁ SOLO EL MÉDICO QUE REGISTRÓ LA CONSULTA
                         if consulta.turno.agenda.medicoespecialidad.idMedicoFK === usuario.idMedicoFK
 
-                            //- EVOLUCIÓN
-                            li.list-group-item
-                                strong Evolución:
+                            strong.detalle-titulo Evolucion: 
                                 if consulta.evolucion
                                     div.mt-2!= consulta.evolucion
                                 else
-                                    span.text-muted  No disponible
+                                    span.text-muted  No registrado
+                            br
 
-                            //- ANTECEDENTES
-                            li.list-group-item
-                                strong Antecedentes:
+                            strong.detalle-titulo Antecedentes: 
                                 if consulta.antecedentes && consulta.antecedentes.length > 0
                                     each a in consulta.antecedentes
                                         .ms-2.mt-1
@@ -68,20 +61,18 @@ block content
                                             small.text-muted.ms-2 Desde: #{a.fechaDesdeAntecedente} - Hasta: #{a.fechaHastaAntecedente}
                                 else
                                     span.text-muted  No registrado
+                            br
 
-                            //- MEDICAMENTOS
-                            li.list-group-item
-                                strong Medicamentos:
+                            strong.detalle-titulo Medicamentos: 
                                 if consulta.medicamentos && consulta.medicamentos.length > 0
                                     each m in consulta.medicamentos
                                         .ms-2.mt-1
                                             | #{m.nombreMedicamento}
                                 else
                                     span.text-muted  No registrado
+                            br
 
-                            //- HÁBITOS
-                            li.list-group-item
-                                strong Hábitos:
+                            strong.detalle-titulo Hábitos: 
                                 if consulta.habitos && consulta.habitos.length > 0
                                     each h in consulta.habitos
                                         .ms-2.mt-1
@@ -89,10 +80,9 @@ block content
                                             small.text-muted.ms-2 Desde: #{h.fechaDesdeHabito} - Hasta: #{h.fechaHastaHabito}
                                 else
                                     span.text-muted  No registrado
+                            br 
 
-                            //- ALERGIAS
-                            li.list-group-item
-                                strong Alergias:
+                            strong.detalle-titulo Alergias: 
                                 if consulta.alergias && consulta.alergias.length > 0
                                     each a in consulta.alergias
                                         .ms-2.mt-1
@@ -106,4 +96,7 @@ block content
                             li.list-group-item.text-muted
                                 i.fas.fa-lock.me-2
                                 | Los demás datos de esta consulta son privados del médico tratante.
-
+    if error
+        .alert.alert-danger
+            i.fas.fa-circle-exclamation.me-2
+            | #{error}  

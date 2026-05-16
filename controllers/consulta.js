@@ -42,66 +42,98 @@ const abrirConsulta = async (req, res) => {
 }
 
 const renderConsulta = async (req, res) => {
-    const {idConsulta} = req.params;
 
-    const consulta = await Consulta.findByPk(idConsulta, {
-    include: [
-        {
-            model: Diagnostico,
-            as: "diagnosticos"
-        },
-        {
-            model: Medicamento,
-            as: "medicamentos"
-        },
-        {
-            model: Antecedentes,
-            as: "antecedentes"
-        },
-        {
-            model: Habito,
-            as: "habitos"
-        },
-        {
-            model: ConsultaAlergia,
-            as: "alergias",
-            include: [
-                {
-                    model: Alergia,
-                    as: "alergia"
-                },
-                {
-                    model: Importancia,
-                    as: "importancia"
-                }
-            ]
-        },
-        {
-            model: Turno,
-            as: "turno"
+    try {
+        const {idConsulta} = req.params;
+
+        const consulta = await Consulta.findByPk(idConsulta, {
+        include: [
+            {
+                model: Diagnostico,
+                as: "diagnosticos"
+            },
+            {
+                model: Medicamento,
+                as: "medicamentos"
+            },
+            {
+                model: Antecedentes,
+                as: "antecedentes"
+            },
+            {
+                model: Habito,
+                as: "habitos"
+            },
+            {
+                model: ConsultaAlergia,
+                as: "alergias",
+                include: [
+                    {
+                        model: Alergia,
+                        as: "alergia"
+                    },
+                    {
+                        model: Importancia,
+                        as: "importancia"
+                    }
+                ]
+            },
+            {
+                model: Turno,
+                as: "turno"
+            }
+            ],
+            order: [["idConsulta", "DESC"]]   
+        });
+
+        // Consultar si es necesarioooooooo
+        if (!consulta) {
+
+            return res.status(404).render("../views/consulta.pug", {
+                error: true,
+                errorMensaje: "Consulta no encontrada"
+            });
         }
-        ],
-        order: [["idConsulta", "DESC"]]   
-    });
 
-    const idPaciente = consulta.turno.idPacienteFK;
-    const historial = await obtenerHistoriaClinica(idPaciente, idConsulta);
+        if (!consulta.turno) {
+            throw new Error("La consulta no tiene turno asociado");
+        }
 
-    const alergias = await Alergia.findAll();
-    const importancias = await Importancia.findAll();
-    
-    res.render("../views/consulta.pug", {
-        consulta, 
-        historial,
-        idConsulta, 
-        error: false, 
-        isVisible: false, 
-        importancias, 
-        alergias
+        const idPaciente = consulta.turno.idPacienteFK;
+
+        const historial = await obtenerHistoriaClinica(idPaciente, idConsulta);
+
+        const alergias = await Alergia.findAll();
+
+        const importancias = await Importancia.findAll();
         
-    });
+        res.render("../views/consulta.pug", {
+            consulta, 
+            historial,
+            idConsulta, 
+            error: false, 
+            isVisible: false, 
+            importancias,   
+            alergias
+            
+        });
+    }catch (error) {
+        console.log(error);
 
-    console.log("consulta encontrada:", consulta ? "SI" : "NULL");
+        res.status(500).render("../views/consulta.pug", {
+
+            error: true,
+            errorMensaje: "Error al cargar la consulta",
+
+            consulta: null,
+            historial: [],
+
+            alergias: [],
+            importancias: []
+        });
+    }
+    
+
 }
 
 //funcion para reutilizar 
@@ -183,11 +215,25 @@ const obtenerHistoriaClinica = async (idPaciente, excluirIdConsulta = null) => {
 }
 
 const verHCL = async (req, res) => {
-    const {idPaciente} = req.params;
+    try {
+        
+        const {idPaciente} = req.params;
 
-    const consultas = await obtenerHistoriaClinica(idPaciente);
+        const consultas = await obtenerHistoriaClinica(idPaciente);
 
-    res.render("../views/historiaClinica.pug", { consultas, idPaciente});
+        res.render("../views/historiaClinica.pug", { consultas, idPaciente});
+
+    } catch (error) {   
+        
+        res.status(500).render("../views/historiaClinica.pug", {
+            error: "Error al obtener la historia clínica",
+            consultas: [],
+            idPaciente: null
+        });
+
+    }
+
+    
 }
 
 
@@ -256,115 +302,6 @@ const finalizarConsulta = async (req, res) => {
     res.redirect("/turno");
 
 }
-
-/*const editarConsulta = async (req, res) => {
-    
-}
-
-
-
-
-
-/*const verHCL = async (req, res) => {
-    const { idPaciente } = req.params;
-    const idMedico = req.session.usuario.idMedicoFK;
-
-    const consultas = await Consulta.findAll({
-        include: [
-            {
-                model: Turno,
-                as: "turno",
-                where: {
-                    idPacienteFK: idPaciente
-                },
-                include: [
-                    {
-                        model: Agenda,
-                        as: "agenda",
-                        include: [
-                            {
-                                model: MedicoEspecialidad,
-                                as: "medicoespecialidad",
-                                include: [
-                                    {
-                                        model: Medico,
-                                        as: "medico",
-                                        include: [
-                                            {
-                                                model: Persona,
-                                                as: "persona"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                            
-                        ]
-                    },
-                    {
-                        model: Paciente,
-                        as: "paciente"
-                    }
-                ]
-            },
-            {
-                model: Diagnostico,
-                as: "diagnosticos"
-            },
-            {
-                model: Medicamento,
-                as: "medicamentos"
-            },
-            {
-                model: Antecedentes,
-                as: "antecedentes"
-            },
-            {
-                model: Habito,
-                as: "habitos"
-            },
-            {
-                model: ConsultaAlergia,
-                as: "alergias",
-                include: [
-                    {
-                        model: Alergia,
-                        as: "alergia"
-                    },
-                    {
-                        model: Importancia,
-                        as: "importancia"
-                    }
-                ]
-            }
-        ],
-        order: [
-            ['fechaAtencion', 'DESC']
-        ]
-        
-    });
-
-    res.render("../views/historiaClinica.pug", { consultas, idPaciente, idMedico });
-};
-
-/*const findAllSelects = async (req, res) => {
-
-    idTurno = req.query.id;
-    const importancias = await Importancia.findAll();
-    const alergias = await Alergia.findAll();
-
-    turno = await Turno.findOne({
-        where: {
-            idTurno: idTurno
-        }
-    });
-    
-    await updateEstado(idTurno)
-    
-
-    res.render("../views/consulta.pug",{idTurno,error:false, isVisible: false, importancias, alergias});
-} */
-
 
 
 /*const createConsulta = async (req, res) => {
@@ -456,8 +393,7 @@ const finalizarConsulta = async (req, res) => {
     res.render("../views/consulta.pug", { isVisible:false, error:true, idTurno, importancias, alergias});
 
 }*/
-
-
+        
 
 module.exports= { abrirConsulta, 
     renderConsulta, 

@@ -1,11 +1,8 @@
 extends layout 
 
-block content 
-    header.text-white.py-4(style="background-color: #84d5d5; color: white;")
-        button.btn.btn-light.btn-sm.ml-3(onclick="window.history.go(-2)")
-            i.fas.fa-arrow-left
-        h1.text-center Atención Médica 
-        p.text-center Consulta
+block content
+    .vista-header
+        h2.mb-0 Consulta Médica
 
     if isVisible
         p(style="display: block; color: green; font-size: 24px; font-weight: bold; text-align: center;") Consulta guardada!
@@ -14,17 +11,35 @@ block content
 
     .container-fluid.mt-4
         .row
-            //- COLUMNA IZQUIERDA - Consulta actual
             .col-md-9
+                form(action=`/consulta/${idConsulta}/finalizar` method="POST" id="formFinalizar")
+                    .card.mb-4
+                        .card-header
+                            h5.mb-0
+                                i.fas.fa-notes-medical.me-2
+                                | Evolución
+
+                        .card-body
+
+                            button.btn.btn-outline-secondary.btn-sm.mb-3( type="button" data-bs-toggle="modal" data-bs-target="#modalPlantillas")
+                                i.fas.fa-file-alt.me-1
+                                | Cargar plantilla
+
+                            input(type="hidden" id="evolucionExistente" value=consulta.evolucion || "")
+
+                            div#editor(style="height: 250px;")
+
+                            input(type="hidden" id="editorContent" name="evolucion")
+
                 .container
                     .row
                         .col-md-6
-                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalDiagnostico") + Diagnóstico
+                            button.btn.btn-primary.btn-action(data-bs-toggle="modal" data-bs-target="#modalDiagnostico") + Diagnóstico
 
                             if consulta.diagnosticos && consulta.diagnosticos.length > 0
                                 h3.mt-4 Diagnósticos
                                 each d in consulta.diagnosticos
-                                    .card.mb-3.shadow-sm
+                                    .card.mb-3
                                         .card-body.d-flex.justify-content-between.align-items-center
                                             div
                                                 p.mb-1 #{d.detalleDiagnostico}
@@ -34,12 +49,12 @@ block content
                                                     i.fas.fa-trash
 
                         .col-md-6
-                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalMedicamento") + Medicamento
+                            button.btn.btn-primary.btn-action(data-bs-toggle="modal" data-bs-target="#modalMedicamento") + Medicamento
 
                             if consulta.medicamentos && consulta.medicamentos.length > 0
                                 h3.mt-4 Medicamentos
                                 each m in consulta.medicamentos
-                                    .card.mb-3.shadow-sm
+                                    .card.mb-3
                                         .card-body.d-flex.justify-content-between.align-items-center
                                             div
                                                 p.mb-1 #{m.nombreMedicamento}
@@ -49,12 +64,12 @@ block content
 
                     .row.mt-3
                         .col-md-6
-                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalAntecedente") + Antecedente
+                            button.btn.btn-primary.btn-action(data-bs-toggle="modal" data-bs-target="#modalAntecedente") + Antecedente
 
                             if consulta.antecedentes && consulta.antecedentes.length > 0
                                 h3.mt-4 Antecedentes
                                 each a in consulta.antecedentes
-                                    .card.mb-3.shadow-sm
+                                    .card.mb-3
                                         .card-body.d-flex.justify-content-between.align-items-center
                                             div
                                                 p.mb-1 #{a.descripcionAntecedente}
@@ -64,12 +79,12 @@ block content
                                                     i.fas.fa-trash
 
                         .col-md-6
-                            button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalHabito") + Habito
+                            button.btn.btn-primary.btn-action(data-bs-toggle="modal" data-bs-target="#modalHabito") + Habito
 
                             if consulta.habitos && consulta.habitos.length > 0
                                 h3.mt-4 Habitos
                                 each h in consulta.habitos
-                                    .card.mb-3.shadow-sm
+                                    .card.mb-3
                                         .card-body.d-flex.justify-content-between.align-items-center
                                             div
                                                 p.mb-1 #{h.descripcionHabito}
@@ -85,7 +100,7 @@ block content
                             if consulta.alergias && consulta.alergias.length > 0
                                 h3.mt-3 Alergias
                                 each a in consulta.alergias
-                                    .card.mb-2.shadow-sm
+                                    .card.mb-2
                                         .card-body.d-flex.justify-content-between.align-items-center
                                             div
                                                 p.mb-1 #{a.alergia.nombreAlergia}
@@ -96,29 +111,15 @@ block content
                                                 button.btn.btn-outline-danger.btn-sm
                                                     i.fas.fa-trash
 
-                form(action=`/consulta/${idConsulta}/finalizar` method="POST" id="formFinalizar")
-                    .mb-3
-                        button.btn.btn-outline-secondary.btn-sm.mb-2(
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalPlantillas"
-                        )
-                            i.fas.fa-file-alt.me-1
-                            | Cargar plantilla
-
-                        label.form-label(style="color: rgba(0, 0, 0, 0.8); background-color:rgba(255, 255, 255, 0.5); font-size: 24px; font-weight: bold;") EVOLUCION
-                        
-                        input(type="hidden" id="evolucionExistente" value=consulta.evolucion || "")
-
-                        div(id="editor" style="height: 200px;")
-
-                    input(type="hidden" id="editorContent" name="evolucion")
-                    button.btn.btn-primary(type="submit") Finalizar Consulta
+                .d-flex.justify-content-end.mt-4.mb-5
+                    button.btn.btn-primary.btn-lg(type="submit" form="formFinalizar")
+                        i.fas.fa-check.me-2
+                        | Finalizar Consulta
 
             //- COLUMNA DERECHA - Historial
             .col-md-3
                 .card.shadow-sm(style="position: sticky; top: 20px; max-height: 90vh; overflow-y: auto;")
-                    .card-header(style="background-color: #84d5d5; color: white;")
+                    .card-header
                         h6.mb-0
                             i.fas.fa-history.me-2
                             | Historial del Paciente
@@ -139,14 +140,14 @@ block content
                                                     | 📅 #{fecha}
                                         .accordion-collapse.collapse(id=`col_${h.idConsulta}`)
                                             .accordion-body.p-2
-                                                //- MOTIVO - visible para todos
+                                                
                                                 small
                                                     strong Motivo: 
                                                     | #{h.turno ? h.turno.motivo : 'No asignado'}
 
                                                 hr.my-1
 
-                                                //- DIAGNÓSTICOS - visible para todos
+                                            
                                                 small
                                                     strong Diagnósticos:
                                                 if h.diagnosticos && h.diagnosticos.length > 0
@@ -242,7 +243,7 @@ block content
 
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                        button.btn.btn-primary(type="submit") Guardar
+                        button.btn.btn-primary.btn-action(type="submit") Guardar
 
     .modal.fade#modalMedicamento(tabindex="-1")
         .modal-dialog
@@ -257,7 +258,7 @@ block content
 
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                        button.btn.btn-primary(type="submit") Guardar
+                        button.btn.btn-primary.btn-action(type="submit") Guardar
 
     .modal.fade#modalAntecedente(tabindex="-1")
         .modal-dialog
@@ -270,12 +271,12 @@ block content
                     .modal-body
                         textarea.form-control(name="descripcionAntecedente" placeholder="Ingrese antecedente" required)
 
-                        input.form-control.mt-2(type="date" name="fechaDesdeAntecedente" required)
+                        input.form-control.mt-2(type="date" name="fechaDesdeAntecedente")
                         input.form-control.mt-2(type="date" name="fechaHastaAntecedente")
 
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                        button.btn.btn-primary(type="submit") Guardar
+                        button.btn.btn-primary.btn-action(type="submit") Guardar
     
     .modal.fade#modalHabito(tabindex="-1")
         .modal-dialog
@@ -288,12 +289,12 @@ block content
                     .modal-body
                         textarea.form-control(name="descripcionHabito" placeholder="Ingrese habito" required)
 
-                        input.form-control.mt-2(type="date" name="fechaDesdeHabito" required)
+                        input.form-control.mt-2(type="date" name="fechaDesdeHabito")
                         input.form-control.mt-2(type="date" name="fechaHastaHabito")
 
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                        button.btn.btn-primary(type="submit") Guardar
+                        button.btn.btn-primary.btn-action(type="submit") Guardar
                 
     .modal.fade#modalAlergia(tabindex="-1")
         .modal-dialog
@@ -305,21 +306,18 @@ block content
                 form(action=`/consultaAlergia/${idConsulta}` method="POST")
                     .modal-body
                         
-                        // SELECT ALERGIA
                         label.form-label Alergia
                         select.form-select(name="idAlergiaFK" required)
                             option(value="") Seleccione una alergia
                             each a in alergias
                                 option(value=a.idAlergia) #{a.nombreAlergia}
 
-                        // SELECT IMPORTANCIA
                         label.form-label.mt-2 Importancia
                         select.form-select(name="idImportanciaFK" required)
                             option(value="") Seleccione importancia
                             each i in importancias
                                 option(value=i.idImportancia) #{i.gradoImportancia}
-
-                        // FECHAS
+                        
                         label.form-label.mt-2 Desde
                         input.form-control(type="date" name="fechaDesdeAlergia" required)
 
@@ -328,7 +326,8 @@ block content
 
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                        button.btn.btn-primary(type="submit") Guardar
+                        button.btn.btn-primary.btn-action(type="submit") Guardar
+
     .modal.fade#modalPlantillas(tabindex="-1")
         .modal-dialog
             .modal-content
@@ -340,7 +339,7 @@ block content
                         option(value="") Cargando...
                 .modal-footer
                     button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-                    button.btn.btn-primary(onclick="cargarPlantilla()") Cargar
+                    button.btn.btn-primary.btn-action(onclick="cargarPlantilla()") Cargar
 block scripts
     script(src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js")
     script(src="/js/consulta.js")

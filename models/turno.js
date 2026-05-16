@@ -1,8 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require("../config/configbd");
-/* const Paciente = require("../models/paciente");
-const Agenda = require("../models/agenda");
-const EstadoTurno= require("../models/estadoturno") */
+
 
 const Turno= sequelize.define(
     'turno',

@@ -6,7 +6,4 @@ const findAllAlergias = async (req,res) =>{
 
 }
 
-
-
-
 module.exports= { findAllAlergias };

@@ -5,25 +5,73 @@ html(lang="en")
         title Login
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
-    body(style="background-image: url('../imagenes/fondoMedico.jpeg');")
-        header.text-white.py-4(style="background-color: #84d5d5;")
-            h1.text-center Atención Médica
-            p.text-center Ingreso al sistema
+        
+        link(rel="preconnect" href="https://fonts.googleapis.com")
+        link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+        link(href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet")
+
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+
+        link(rel="stylesheet" href="/css/estilos.css")
+
+    body.login-body
+
+        header.login-header.py-4
+
+            .d-flex.justify-content-center.align-items-center.mb-2
+                i.fas.fa-heartbeat.me-2.fs-2
+                h1.mb-0 Atención Médica
+
+            p.text-center.mb-0 Ingreso al sistema
 
         .container.d-flex.justify-content-center.align-items-center.mt-5
-            .p-4.border.rounded.shadow-lg(style="background-color: #e4e4e4; width: 400px;")
-                h3.text-center.mb-4(style="color: #43adcf") Login
+            .card.login-card.p-4
+
+                h3.login-title.text-center.mb-4 Login
 
                 form(method="POST" action="/login")
+
                     .mb-3
                         label.form-label Usuario
-                        input.form-control(type="text" name="email" required)
+                        input.form-control(type="text" name="email" required value=email || '')
 
                     .mb-3
                         label.form-label Contraseña
-                        input.form-control(type="contraseña" name="contraseña" required)
+                        .input-group
+                            input#password.form-control(
+                                type="password"
+                                name="contraseña"
+                                required
+                            )
 
-                    button.btn.btn-primary.w-100(style="background-color: #43adcf") Ingresar
+                            button#togglePassword.btn.btn-outline-secondary(
+                                type="button"
+                            )
+                                i#eyeIcon.fas.fa-eye
+
+
+                    button.btn.btn-primary.w-100 Ingresar
 
                 if error
-                    p.text-danger.text-center.mt-3 #{error}
+                    .alert.alert-danger.mt-3
+                        i.fas.fa-circle-exclamation.me-2
+                        | #{error}
+    script.
+        var togglePassword = document.getElementById('togglePassword');
+        var password = document.getElementById('password');
+        var eyeIcon = document.getElementById('eyeIcon');
+
+        togglePassword.addEventListener('click', function () {
+
+            if (password.type === 'password') {
+                password.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                password.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+
+        });
+    

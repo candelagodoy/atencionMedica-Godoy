@@ -57,22 +57,28 @@ const login = async (req, res) => {
                     apellido: user.medico.persona.apellido,
                     dni: user.medico.persona.dni,
                     matricula: user.medico.medicoespecialidad[0].matricula,
-                   
                 };
                 console.log(req.session.usuario);
 
                 res.redirect("/agenda");
             }
             else{
-                res.render("../views/login.pug", {error: "Contraseña incorrecta"});
+                return res.render('login', 
+                    {error: 'Contraseña incorrecta',
+                        email: req.body.email
+                    });
             }
         }
         else{
-            res.render("../views/login.pug", {error: "El usuario no existe"});
+            return res.render('login', 
+                { error: 'Usuario no registrado', 
+                    email: req.body.email
+                });
         }
     }
     catch(error){
         console.log(error);
+        res.render("../views/login.pug", { error: "Ocurrió un error, intente nuevamente" });
     }
 
 }

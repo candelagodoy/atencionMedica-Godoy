@@ -1,7 +1,7 @@
 let table = new DataTable('#miTabla');
 
 
-async function buscarTurnos() {
+async function buscarTurnos() { 
 
     try {
         const idMedicoEspecialidad = document.getElementById('medicoEspecialidad').value;

@@ -7,13 +7,19 @@ html(lang="en")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js")
         link(href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+        link(rel="preconnect" href="https://fonts.googleapis.com")
+        link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+        link(href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet")
+        link(rel="stylesheet" href="/css/estilos.css")
+
         block head
 
     body
-        
-        nav.navbar.navbar-expand-lg.navbar-dark(style="background-color: #84d5d5;")
+        nav.navbar.navbar-expand-lg.navbar-dark
             .container-fluid
-                a.navbar-brand Atención Médica
+                a.navbar-brand
+                    i.fas.fa-heartbeat.me-2
+                    | Atención Médica
 
                 button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav")
                     span.navbar-toggler-icon
@@ -21,22 +27,24 @@ html(lang="en")
                 #navbarNav.collapse.navbar-collapse
                     ul.navbar-nav.me-auto
                         li.nav-item
-                            a.nav-link(href="/agenda") 
+                            a.nav-link(href="/agenda")
                                 i.fas.fa-calendar-alt.me-1
                                 | Agenda
 
-                        // DROPDOWN PLANTILLAS
                         li.nav-item.dropdown
                             a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown")
                                 i.fas.fa-file-alt.me-1
                                 | Plantillas
                             ul.dropdown-menu
                                 li
-                                    a.dropdown-item(href="/plantillas") Ver plantillas
+                                    a.dropdown-item(href="/plantillas")
+                                        i.fas.fa-list.me-2
+                                        | Ver plantillas
                                 li
-                                    a.dropdown-item(href="/plantillas/nueva") Nueva plantilla
+                                    a.dropdown-item(href="/plantillas/nueva")
+                                        i.fas.fa-plus.me-2
+                                        | Nueva plantilla
 
-                    
                     ul.navbar-nav.ms-auto
                         li.nav-item.dropdown
                             a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown")
@@ -48,7 +56,6 @@ html(lang="en")
                                         i.fas.fa-sign-out-alt.me-1
                                         | Cerrar sesión
 
-        
         block content
-        
+
         block scripts
