@@ -3,18 +3,24 @@ const quill = new Quill("#editor", {
     theme: "snow",
 });
 
-
-//submit finalizar consulta
 document.addEventListener("DOMContentLoaded", () => {
 
+    // carga la evolucion existente
+    const evolucionExistente = document.getElementById('evolucionExistente');
+    
+    if (evolucionExistente && evolucionExistente.value) {
+        quill.clipboard.dangerouslyPasteHTML(evolucionExistente.value);
+    }
+
+    // LOGS antes de redirect
+    window.addEventListener('beforeunload', () => {
+        console.log("--- PÁGINA ABANDONADA ---");
+    });
+
     const form = document.querySelector("#formFinalizar");
-
     form.addEventListener("submit", function () {
-
         const editorContent = quill.root.innerHTML;
-
         document.getElementById("editorContent").value = editorContent;
-
         console.log("Contenido guardado:", editorContent);
     });
 
@@ -35,8 +41,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-});
+    // Guardado automático al abrir cualquier modal
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const evolucion = quill.root.innerHTML;
+            const idConsulta = window.location.pathname.split('/')[2];
 
+            try {
+                await fetch(`/consulta/${idConsulta}/guardarEvolucion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evolucion })
+                });
+                console.log("Evolución guardada automáticamente");
+            } catch (error) {
+                console.error("Error al guardar evolución:", error);
+            }
+        });
+    });
+
+    // Guardar evolución antes de submitear cualquier form de modal
+    document.querySelectorAll('.modal form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const evolucion = quill.root.innerHTML;
+            const idConsulta = window.location.pathname.split('/')[2];
+
+            try {
+                const response = await fetch(`/consulta/${idConsulta}/guardarEvolucion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evolucion })
+                });
+                const data = await response.json();
+                
+            } catch (error) {
+                console.error("Error al guardar evolución antes de submit:", error);
+            }
+
+            form.submit();
+        });
+    });
+
+});
 
 function cargarPlantilla() {
     const select = document.getElementById('selectPlantilla');
@@ -53,13 +101,8 @@ function cargarPlantilla() {
     bootstrap.Modal.getInstance(document.getElementById('modalPlantillas')).hide();
 }
 
-// cuando tengo una evolucion cargada, carga la existente
-document.addEventListener("DOMContentLoaded", () => {
-    const evolucionExistente = document.getElementById('evolucionExistente');
-    if (evolucionExistente && evolucionExistente.value) {
-        quill.clipboard.dangerouslyPasteHTML(evolucionExistente.value);
-    }
-});
+
+
 
 
 

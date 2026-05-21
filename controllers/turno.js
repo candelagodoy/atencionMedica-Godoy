@@ -21,12 +21,17 @@ const obtenerTurnosPorAgenda = async(req, res) =>{
         
         const idsAgendas = agendas.map(agenda => agenda.idAgenda); //saco los ids
 
+        const hoy = new Date();
+
+
         const turnoPorAgenda = await Turno.findAll(
             {
                 where: {
                     idAgendaFK: idsAgendas,
                     fechaTurno: new Date('2026-10-04')
+                    
                 },
+                
                 include: [
                     {
                         model: Paciente,

@@ -2,12 +2,13 @@ const express = require('express');
 const plantillaRouter = express.Router();
 const { listarPlantillas, crearPlantilla, eliminarPlantilla, getPlantillasJSON, nuevaPlantilla } = require("../controllers/plantilla");
 const { render } = require("pug");
+const autenticacion = require("../middlewares/autenticacion");
 
-plantillaRouter.get("/api", getPlantillasJSON);
-plantillaRouter.get("/", listarPlantillas);
-plantillaRouter.get("/nueva", nuevaPlantilla);
-plantillaRouter.post("/", crearPlantilla);
-plantillaRouter.delete("/:id", eliminarPlantilla);
+plantillaRouter.get("/api",autenticacion, getPlantillasJSON);
+plantillaRouter.get("/", autenticacion, listarPlantillas);
+plantillaRouter.get("/nueva", autenticacion, nuevaPlantilla);
+plantillaRouter.post("/", autenticacion, crearPlantilla);
+plantillaRouter.delete("/:id", autenticacion, eliminarPlantilla);
 
 
 

@@ -2,7 +2,7 @@ extends layout
 
 block content
     .vista-header
-            h2.mb-0 Historial de Consultas
+            h2.mb-0 Historia Clínica
     .container.mt-4
         each consulta, index in consultas
 
@@ -12,9 +12,7 @@ block content
 
                     .d-flex.justify-content-between.align-items-center
                         div
-                            - const fechaFormateada = new Date(consulta.fechaAtencion).toLocaleDateString("es-ES")
-                            - const horaFormateada = new Date(consulta.fechaAtencion).toLocaleTimeString("es-ES", { hour: '2-digit', minute: '2-digit' })
-                            h5.mb-0 📅 #{fechaFormateada} #{horaFormateada}
+                            h5.mb-0 📅 #{consulta.fechaAtencion.toISOString().split('T')[0]}
                         
                         //- Botón editar la ultima consulta y solo si es su medico
                         if index === 0 && consulta.turno.agenda.medicoespecialidad.idMedicoFK === usuario.idMedicoFK

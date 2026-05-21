@@ -2,9 +2,10 @@ const express = require("express");
 const turnoRouter = express.Router();
 
 const { obtenerTurnosPorAgenda, buscarTurnos } = require("../controllers/turno");
+const autenticacion = require("../middlewares/autenticacion");
 
-turnoRouter.get("/", obtenerTurnosPorAgenda);
-turnoRouter.get("/buscar", buscarTurnos);
-//turnoRouter.put("/actualizar-estado/:idTurno", updateEstado)
+turnoRouter.get("/", autenticacion, obtenerTurnosPorAgenda);
+turnoRouter.get("/buscar", autenticacion, buscarTurnos);
+
 
 module.exports = turnoRouter;

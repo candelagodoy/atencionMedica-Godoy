@@ -4,88 +4,56 @@ const { findAllImportancias } = require("./importancia")
 const { updateEstado }= require("./turno")
 const { Op } = require("sequelize");
 
-var idTurno = '';
-var turno = '';
 
 const abrirConsulta = async (req, res) => {
-    const idTurno = req.query.id;
+    try{
+        const idTurno = req.query.id;
 
-    const turno = await Turno.findOne({
-        where: {
-            idTurno: idTurno
-        }
-    });
-
-    if (!turno) {
-        return res.send("Turno no encontrado");
-    }
-    
-    /*let consulta = await Consulta.findOne({
-        where: { idTurnoFK: idTurno }
-    });*/ //para evitar que se dupliquen consultas
-
-    /*if (!consulta) {
-        consulta = await Consulta.create({
-            fechaAtencion: turno.fechaTurno,
-            evolucion: '',
-            idTurnoFK: turno.idTurno
+        const turno = await Turno.findOne({
+            where: {
+                idTurno: idTurno
+            }
         });
-    }*/
 
-    const consulta = await Consulta.create({
+        if (!turno) {
+            return res.send("Turno no encontrado");
+        }
+
+        let consulta = await Consulta.findOne({
+            where: { idTurnoFK: idTurno }
+        }); //para evitar que se dupliquen consultas
+
+        if (!consulta) {
+            consulta = await Consulta.create({
+                fechaAtencion: turno.fechaTurno,
+                evolucion: '',
+                idTurnoFK: turno.idTurno
+            });
+        }
+
+        res.redirect(`/consulta/${consulta.idConsulta}`);
+
+    }catch(error){
+        console.error("Error al abrir consulta:", error);
+        res.status(500).send("Error al abrir la consulta");
+    }
+
+    /*const consulta = await Consulta.create({
         fechaAtencion: turno.fechaTurno,
         evolucion: '',
         idTurnoFK: turno.idTurno
-    });
-
-    res.redirect(`/consulta/${consulta.idConsulta}`);
+    });*/
+   
 }
 
 const renderConsulta = async (req, res) => {
+    
 
     try {
+        const {evolucion} = req.body;
         const {idConsulta} = req.params;
 
-        const consulta = await Consulta.findByPk(idConsulta, {
-        include: [
-            {
-                model: Diagnostico,
-                as: "diagnosticos"
-            },
-            {
-                model: Medicamento,
-                as: "medicamentos"
-            },
-            {
-                model: Antecedentes,
-                as: "antecedentes"
-            },
-            {
-                model: Habito,
-                as: "habitos"
-            },
-            {
-                model: ConsultaAlergia,
-                as: "alergias",
-                include: [
-                    {
-                        model: Alergia,
-                        as: "alergia"
-                    },
-                    {
-                        model: Importancia,
-                        as: "importancia"
-                    }
-                ]
-            },
-            {
-                model: Turno,
-                as: "turno"
-            }
-            ],
-            order: [["idConsulta", "DESC"]]   
-        });
-
+        const consulta = await obtenerConsultaCompleta(idConsulta);
         // Consultar si es necesarioooooooo
         if (!consulta) {
 
@@ -114,7 +82,8 @@ const renderConsulta = async (req, res) => {
             error: false, 
             isVisible: false, 
             importancias,   
-            alergias
+            alergias,
+            evolucionTemp: evolucion
             
         });
     }catch (error) {
@@ -130,6 +99,7 @@ const renderConsulta = async (req, res) => {
 
             alergias: [],
             importancias: []
+            
         });
     }
     
@@ -241,67 +211,118 @@ const finalizarConsulta = async (req, res) => {
     const {idConsulta} = req.params;
     const {evolucion} = req.body;
 
-    const consulta = await Consulta.findByPk(idConsulta, {
+    try{
+        const consulta = await obtenerConsultaCompleta(idConsulta);
+
+        if (!consulta) {
+            return res.status(404).send("Consulta no encontrada");
+        }
+
+        const alergias = await Alergia.findAll();
+        const importancias = await Importancia.findAll();
+        const historial = await obtenerHistoriaClinica(consulta.turno.idPacienteFK, idConsulta);
+
+        const renderError = (mensaje) =>
+            res.render("../views/consulta.pug", {
+                consulta,
+                idConsulta,
+                alergias,
+                importancias,
+                historial,
+                error: true,
+                isVisible: false,
+                errorMensaje: mensaje,
+                evolucionTemp: evolucion
+            });
+        
+        if (!consulta.diagnosticos || consulta.diagnosticos.length === 0) {
+            return renderError("Debe registrar al menos un diagnóstico antes de finalizar la consulta.");
+        }
+
+        if (!evolucion || evolucion.trim() === "" || evolucion.trim() === "<p><br></p>") {
+            return renderError("Debe registrar una evolución antes de finalizar la consulta.");
+        }
+
+        await consulta.update({
+            evolucion: evolucion,
+            estadoConsulta: "Finalizada"
+        });
+
+        await Turno.update(
+            {idEstadoFK: 3},
+            {
+                where: {
+                    idTurno: consulta.idTurnoFK
+                }
+            }
+        )
+
+        res.redirect("/turno");
+
+
+    }catch(error){
+        console.error("Error al finalizar consulta:", error);
+        res.status(500).send("Error inesperado al finalizar la consulta");
+    }
+
+
+}
+
+const obtenerConsultaCompleta = (idConsulta) => {
+    return Consulta.findByPk(idConsulta, {
         include: [
             { 
                 model: Diagnostico, 
-                as: "diagnosticos" 
+                as: "diagnosticos" },
+            { 
+                model: Medicamento, 
+                as: "medicamentos" },
+            { 
+                model: Antecedentes, 
+                as: "antecedentes" },
+            { 
+                model: Habito, 
+                as: "habitos" },
+            { 
+                model: ConsultaAlergia, 
+                as: "alergias",
+                include: [
+                    { 
+                        model: Alergia, 
+                        as: "alergia" },
+                    { 
+                        model: Importancia, 
+                        as: "importancia" }
+                ]
             },
-            {
-                model: Turno,
-                as: "turno"
+            { 
+                model: Turno, 
+                as: "turno" 
             }
-        ]
+
+        ],
+        order: [["idConsulta", "DESC"]]  
+
     });
+};
 
-    const alergias = await Alergia.findAll();
-    const importancias = await Importancia.findAll();
-    const historial = await obtenerHistoriaClinica(consulta.turno.idPacienteFK, idConsulta);
+const guardarEvolucion = async (req, res) => {
+    try {
+        const { idConsulta } = req.params;
+        const { evolucion } = req.body;
 
-    if(!consulta.diagnosticos || consulta.diagnosticos.length === 0) {
-        return res.render("../views/consulta.pug",{
-            consulta, 
-            idConsulta,
-            alergias,
-            importancias,
-            historial,
-            error: true,
-            isVisible: false,
-            errorMensaje: "Debe registrar al menos un diagnóstico antes de finalizar la consulta."
-        });
+        await Consulta.update(
+            { evolucion },
+            { where: { idConsulta } }
+        );
+
+        res.json({ ok: true });
+
+    } catch (error) {
+        console.error("Error al guardar evolución:", error);
+        res.status(500).json({ ok: false });
     }
-
-    if(!evolucion || evolucion.trim() === "" || evolucion.trim() === "<p><br></p>") {
-        return res.render("../views/consulta.pug",{
-            consulta, 
-            idConsulta,
-            alergias,
-            importancias,
-            historial,
-            error: true,
-            isVisible: false,
-            errorMensaje: "Debe registrar una evolución antes de finalizar la consulta."
-        
-        });
-    }
-
-    await consulta.update({
-        evolucion: evolucion,
-        estadoConsulta: "Finalizada"
-    });
-
-    await Turno.update(
-        {idEstadoFK: 3},
-        {
-            where: {
-                idTurno: consulta.idTurnoFK
-            }
-        }
-    )
-
-    res.redirect("/turno");
-
-}
+};
 
 
 /*const createConsulta = async (req, res) => {
@@ -398,5 +419,6 @@ const finalizarConsulta = async (req, res) => {
 module.exports= { abrirConsulta, 
     renderConsulta, 
     finalizarConsulta, 
-    verHCL 
+    verHCL, 
+    guardarEvolucion
 };
